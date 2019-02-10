@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class Client(models.Model):
@@ -6,6 +7,9 @@ class Client(models.Model):
 
     def __str__(self):
         return str(self.client)
+
+    def get_absolute_url(self):
+        return reverse('website:homepage_view')
 
     def get_cost(self, type):
         try:
