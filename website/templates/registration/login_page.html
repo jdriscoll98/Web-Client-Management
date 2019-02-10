@@ -1,0 +1,139 @@
+{% extends 'website/base.html' %}
+
+{% block title %} | Login Page {% endblock title %}
+
+{% block navigation %}
+{% endblock navigation %}
+
+
+{% block content %}
+
+<!-- being-recaptcha -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+	function onSubmit(token) {
+		document.getElementById("recaptcha-form").submit();
+	}
+</script>
+<style>
+	.grecaptcha-badge {
+		display: none;
+	}
+
+	input {
+		font-size: 24px;
+	}
+
+	input, button, .btn {
+			border: 1px solid black;
+	}
+
+	#create-account {
+		font-size: 100%;
+	}
+
+	#create-account:hover {
+		cursor: pointer;
+		animation: grow 0.25s forwards;
+	}
+
+	@keyframes grow {
+	    0% {
+	        font-size: 100%;
+	    }
+	    100% {
+					font-size: 125%;
+	    }
+	}
+
+	.col-md-4 {
+		background-color:#f7f7f7;
+		padding:30px;
+		border: 2px solid black;
+		border-radius: 10px;
+	}
+</style>
+<!-- end-recaptcha -->
+
+
+<div class="center">
+	<div class="row">
+		<div class="col-md-6 offset-md-3">
+				{% include 'website/server_messages.html' %}
+		</div>
+	</div>
+
+	<h1 style="color:white;font-size:300%;">How's it going Pal?</h1>
+	<h3 class="secondary-color">Please login to continue</h3>
+	<br />
+	{% if form.errors %}
+	<p>Your username and password didn't match. Please try again.</p>
+	{% endif %}
+	<div class="row">
+		<div class="col-md-4 offset-md-4">
+			<form id="recaptcha-form" method="post">
+				{% csrf_token %}
+				<strong>Username</strong>
+				{{ form.username }}
+				<br /><br />
+				<strong>Password</strong>
+				{{ form.password }}
+				<input type="hidden" name="next" value="{{ next }}" />
+				<br /><br />
+				<button class="g-recaptcha btn btn-success col-md-8 " data-sitekey="{{ recaptcha_site_key }}" data-callback='onSubmit'>Login</button>
+			</form>
+			<br />
+			<text id="create-account" class="secondary-color" data-toggle="modal" data-target="#create-account-modal"><strong>Create an Account</strong></text>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="create-account-modal">
+	 <div class="modal-dialog modal-lg modal-dialog-centered">
+		 <div class="modal-content">
+
+			 <!-- Modal Header -->
+			 <div class="modal-header">
+				 <h4 class="modal-title">Create an Account</h4>
+				 <button type="button" class="close" data-dismiss="modal">&times;</button>
+			 </div>
+
+			 <!-- Modal body -->
+			 <div class="modal-body center">
+			
+			 </div>
+
+			 <!-- Modal footer -->
+			 <div class="modal-footer">
+				 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			 </div>
+
+		 </div>
+	 </div>
+ </div>
+{% endblock content %}
+
+{% block js %}
+<script>
+//------------------------------------------------------------------------------
+$('#submit').click(function(e) {
+	setup_ajax();
+	e.preventDefault();
+	var form = $('#add-employee-form');
+	$.ajax({ // create an AJAX call...
+			url: form.attr('action'), // the file to call
+			type: form.attr('method'), // GET or POST
+			data: form.serialize(), // get the form data
+			success: function(response) { // on success..
+				if(response.success) {
+					location.reload();
+				}
+				else {
+					alert(response.message)
+				}
+			}
+	});
+})
+//------------------------------------------------------------------------------
+</script>
+{% endblock js %}
