@@ -1,10 +1,26 @@
 from django.db import models
 
+
 class Client(models.Model):
     client = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.client)
+
+    def get_cost(self, type):
+        try:
+            cost = Cost.objects.get(client=self, type=type)
+        except:
+            pass
+        return cost.price
+
+    def get_profit(self, type):
+        try:
+            cost = Cost.objects.get(client=self, type=type)
+        except:
+            pass
+        return cost.get_total_cost()
+
 
 class Cost(models.Model):
     ELEMENTOR = 'el'
@@ -39,3 +55,6 @@ class Cost(models.Model):
 
     def _str__(self):
         return str(self.client) + str(self.type)
+
+    def get_total_cost(self):
+        return int(self.price) - int(self.client_payment)
