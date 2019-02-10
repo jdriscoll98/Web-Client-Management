@@ -8,12 +8,23 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <h1>
+        Summary of Costs
+      </h1>
+      <!-- on change this will refresh the site to show specifc costs -->
+      <select>
+        <option>Summary</option>
+        <option>Elementor</option>
+        <option>Server Hosting</option>
+        <option>Gsuite</option>
+        <option>Summary</option>
+      </select>
       <table id="cost-table class="table">
         <thead>
           <tr>
             <th colspan="3" class="heading">
-              <h2>
-                Costs
+              <h2 id="type">
+                Costs <!-- this will change depending on select -->
               </h2>
             </th>
           </tr>

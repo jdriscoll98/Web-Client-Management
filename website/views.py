@@ -11,5 +11,5 @@ from .utils import *
 #-------------------------------------------------------------------------------
 # Page Views
 #-------------------------------------------------------------------------------
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'website/homepage.html'
