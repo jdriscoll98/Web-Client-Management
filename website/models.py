@@ -30,8 +30,8 @@ class Cost(models.Model):
     )
 
 
-    client = models.ForgeinKey(Client, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, chocies=TYPE_CHOICES)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
     price = models.PositiveIntegerField()
     client_payment = models.IntegerField()
     first_paymnet = models.DateTimeField()
