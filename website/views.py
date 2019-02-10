@@ -6,11 +6,10 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 import json
 
+from .utils import *
+
 #-------------------------------------------------------------------------------
 # Page Views
 #-------------------------------------------------------------------------------
-@login_required
-def homepage_view(request):
-    context = {
-    }
-    return render(request, 'website/homepage.html', context)
+class HomePageView(TemplateView):
+    template_name = 'website/homepage.html'

@@ -1,1 +1,1 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.base import TemplateView
