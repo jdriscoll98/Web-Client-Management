@@ -1,5 +1,73 @@
+body {
+  background-color: #f4f5f6;
+}
+
+#logo {
+  border-radius: 50%;
+}
+
 :root {
   --main-color: black;
-  --secondary-color: #08f;
+  --secondary-color: #003366;
+  --primary-color: #fd6c53;
   --container-corner-radius: 10px;
+  --title-size: 25px;
+}
+
+.navbar-dark, .bg-dark{
+  background-color: var(--secondary-color) !important;
+}
+
+.fa:hover, .far:hover, .fas:hover {
+  cursor: pointer;
+}
+
+table, .table {
+  -webkit-box-shadow: 0px 2px 5px 2px rgba(168,168,168,1);
+  -moz-box-shadow: 0px 2px 5px 2px rgba(168,168,168,1);
+  box-shadow: 0px 2px 5px 2px rgba(168,168,168,1);
+  margin-top: 50px;
+  background-color: white;
+  border-radius: 10px !important;
+}
+
+.heading {
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+
+.center {
+  text-align: center;
+}
+
+input, select {
+  width: 95%;
+  font-size: 20px;
+  padding: 5px;
+  margin-left: 2.5%;
+}
+
+.white {
+  background-color: white;
+}
+
+.input-label {
+  margin-left: 2.5%;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.nav-link {
+  font-weight:bold;
+  color: white !important;
+}
+
+.nav-link:hover {
+  color: #fd6c53 !important;
+}
+#save {
+  font-size: 25px;
 }
