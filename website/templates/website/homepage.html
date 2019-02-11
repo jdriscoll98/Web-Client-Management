@@ -12,38 +12,58 @@
         Summary of Costs
       </h1>
       <!-- on change this will refresh the site to show specifc costs -->
-      <select>
-        <option>Summary</option>
-        <option>Elementor</option>
-        <option>Server Hosting</option>
-        <option>Gsuite</option>
-        <option>Summary</option>
+      <select class="cost" >
+        <option value="{% url 'website:homepage_view' %}">Summary</option>
+        <option value="{% url 'management:view_costs' 'elementor' %}">Elementor</option>
+        <option value="{% url 'management:view_costs' 'server_hosting' %}">Server Hosting</option>
+        <option value="{% url 'management:view_costs' 'gsuite' %}">Gsuite</option>
+        <option value="{% url 'management:view_costs' 'domains' %}">Domains</option>
       </select>
       <table id="cost-table class="table">
         <thead>
           <tr>
             <th colspan="3" class="heading">
               <h2 id="type">
-                Costs <!-- this will change depending on select -->
+                Total Costs <!-- this will change depending on select -->
               </h2>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th class="center">Next Payment Date</th>
+            <th>Type of Cost</th>
+            <th>Profit/Loss</th>
           </tr>
           <tr>
             <td>
-              Client name
+              Elementor
             </td>
             <td>
-              $5
+              ${{ elementor_profit }}
+              </td>
+          </tr>
+          <tr>
+            <td>
+              Server Hosting
             </td>
             <td>
-              N/a
+              ${{ server_profit }}
+              </td>
+          </tr>
+          <tr>
+            <td>
+              Domains
+            </td>
+            <td>
+              ${{ domain_profit }}
+              </td>
+          </tr>
+          <tr>
+            <td>
+              G Suite
+            </td>
+            <td>
+              ${{ GSuite_profit }}
               </td>
           </tr>
         </tbody>
@@ -55,6 +75,10 @@
 
 {% block js %}
 <script>
-
+//  redirect to a cost page
+$(".cost").change(function(){
+  window.location.href = $(this).val()
+});
+//------------------------------------------------------
 </script>
 {% endblock js %}

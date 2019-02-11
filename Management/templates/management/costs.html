@@ -1,0 +1,72 @@
+{% extends 'website/base.html' %}
+
+{% block custom_css %}
+{% endblock custom_css %}
+
+{% block content %}
+{% include 'website/server_messages.html' %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>
+        Summary of Costs
+      </h1>
+      <!-- on change this will refresh the site to show specifc costs -->
+      <select class="cost" >
+        <option value="{% url 'website:homepage_view' %}">Summary</option>
+
+        <option value="{% url 'management:view_costs' 'elementor' %}"
+        {% if 'Elementor' == type %} selected {% endif %}>
+          Elementor</option>
+        <option value="{% url 'management:view_costs' 'server_hosting' %}"
+        {% if 'Server Hosting' == type %} selected {% endif %}>
+        Server Hosting
+        </option>
+        <option value="{% url 'management:view_costs' 'gsuite' %}"
+          {% if 'GSuite' == type %} selected {% endif %}>
+          Gsuite</option>
+        <option value="{% url 'management:view_costs' 'domains' %}"
+        {% if 'Domains' == type %} selected {% endif %}>
+        Domains</option>
+      </select>
+      <table id="cost-table class="table">
+        <thead>
+          <tr>
+            <th colspan="4" class="heading">
+              <h2 id="type">
+                {{ type }} <!-- this will change depending on select -->
+              </h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Client Name</th>
+            <th>Next Payment due</th>
+            <th>Price</th>
+            <th>Client Payment</th>
+          </tr>
+          {% for cost in costs %}
+            <tr>
+              <td> {{ cost.client }}</td>
+              <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
+              <td>${{ cost.price }}</td>
+              <td>${{ cost.client_payment}}</td>
+            </tr>
+          {% endfor %}
+            <tr>{{ profits }}</tr>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+//  redirect to a cost page
+$(".cost").change(function(){
+  window.location.href = $(this).val()
+});
+//------------------------------------------------------
+</script>
+{% endblock js %}
