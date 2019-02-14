@@ -5,6 +5,7 @@
 
 {% block content %}
 {% include 'website/server_messages.html' %}
+
 <div class="container">
   <div class="row">
     <div class="col">
@@ -12,13 +13,6 @@
         Summary of Costs
       </h1>
       <!-- on change this will refresh the site to show specifc costs -->
-      <select class="cost" >
-        <option value="{% url 'website:homepage_view' %}">Summary</option>
-        <option value="{% url 'management:view_costs' 'elementor' %}">Elementor</option>
-        <option value="{% url 'management:view_costs' 'server_hosting' %}">Server Hosting</option>
-        <option value="{% url 'management:view_costs' 'gsuite' %}">Gsuite</option>
-        <option value="{% url 'management:view_costs' 'domains' %}">Domains</option>
-      </select>
       <table id="cost-table class="table">
         <thead>
           <tr>
@@ -35,8 +29,9 @@
             <th>Profit/Loss</th>
           </tr>
           <tr>
-            <td>
+            <td><a href="{% url 'management:view_costs' 'elementor' %}">
               Elementor
+              </a>
             </td>
             <td>
               ${{ elementor_profit }}
@@ -44,7 +39,9 @@
           </tr>
           <tr>
             <td>
-              Server Hosting
+              <a href="{% url 'management:view_costs' 'server_hosting' %}">
+                Server Hosting
+                </a>
             </td>
             <td>
               ${{ server_profit }}
@@ -52,15 +49,19 @@
           </tr>
           <tr>
             <td>
+            <a href="{% url 'management:view_costs' 'domains' %}">
               Domains
-            </td>
+              </a>
+              </td>
             <td>
               ${{ domain_profit }}
               </td>
           </tr>
           <tr>
             <td>
-              G Suite
+              <a href="{% url 'management:view_costs' 'gsuite' %}">
+                Gsuite
+                </a>
             </td>
             <td>
               ${{ GSuite_profit }}

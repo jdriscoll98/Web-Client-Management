@@ -1,0 +1,96 @@
+{% extends 'website/base.html' %}
+
+{% block custom_css %}
+<style type="text/css">
+
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="5" class="heading">
+            <h2>Client</h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th colspan="5"class="text-center">
+            {{ object|title }}
+            </th>
+        </tr>
+        <tr>
+          <th>Payment Type</th>
+          <th>Next Payment due</th>
+          <th>Price</th>
+          <th>Client Payment</th>
+        </tr>
+          {% if elementor_cost %}
+          <tr>
+            <td>Elementor</td>
+
+            <td>{{ elementor_cost.get_next_payment|date:"M d, Y" }}</td>
+            <td>${{ elementor_cost.price }}</td>
+            <td>${{ elementor_cost.client_payment}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td> Add Elementor Cost</td>
+          </tr>
+          {% endif %}
+          <tr>
+          </tr>
+          {% if server_hosting_cost %}
+          <tr>
+            <td>Server Hosting</td>
+
+            <td>{{ server_hosting_cost.get_next_payment|date:"M d, Y" }}</td>
+            <td>${{ server_hosting_cost.price }}</td>
+            <td>${{ server_hosting_cost.client_payment}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td> Add Server Hosting Cost</td>
+          </tr>
+          {% endif %}
+          <tr>
+          </tr>
+          {% if domain_cost %}
+          <tr>
+            <td>Domains</td>
+            <td>{{ domain_cost.get_next_payment|date:"M d, Y" }}</td>
+            <td>${{ domain_cost.price }}</td>
+            <td>${{ domain_cost.client_payment}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td> Add Domain Cost</td>
+          </tr>
+          {% endif %}
+          <tr>
+          </tr>
+          {% if gsuite_cost %}
+          <tr>
+            <td>Gsuite</td>
+
+            <td>{{ gsuite_cost.get_next_payment|date:"M d, Y" }}</td>
+            <td>${{ gsuite_cost.price }}</td>
+            <td>${{ gsuite_cost.client_payment}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td> Add GSuite Cost</td>
+          </tr>
+          {% endif %}
+      </tbody>
+    </table>
+{% endblock content %}
+
+{% block js %}
+<script>
+</script>
+{% endblock js %}

@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from enum import Enum
 from datetime import timedelta
+from .managers import TypeManager
 # Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -12,12 +13,13 @@ class Client(models.Model):
     def get_absolute_url(self):
         return reverse('website:homepage_view')
 
-    def get_cost(self, type):
-        try:
+    def get_cost(self, label):
+        type = Cost.TYPES.get_value(label)
+        if Cost.objects.filter(client=self, type=type).exists():
             cost = Cost.objects.get(client=self, type=type)
-        except:
-            pass
-        return cost.price
+            return cost
+        else:
+            return None
 
     def get_profit(self, type):
         try:
@@ -43,8 +45,12 @@ class Cost(models.Model):
         def get_label(cls, member):
             return cls[member].value[1]
 
-    #also another way to do choices
+    #using model managers to index data
+    objects = models.Manager()
+    TypeManager = TypeManager()
 
+
+    #another way to do choices
     BIWEEKLY = 'wk'
     MONTHLY = 'mo'
     ANNUALY = 'an'
