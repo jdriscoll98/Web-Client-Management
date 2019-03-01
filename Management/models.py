@@ -78,12 +78,12 @@ class Cost(models.Model):
         return reverse()
 
     def get_profit(self):
-        return int(self.price) - int(self.client_payment)
+        return  int(self.client_payment) - int(self.price) 
 
     def get_next_payment(self):
-        if self.PAYMENT_PEROID == self.BIWEEKLY:
+        if self.payment_period == self.BIWEEKLY:
             next_payment = self.last_payment_date + timedelta(days=14)
-        elif self.PAYMENT_PEROID == self.MONTHLY:
+        elif self.payment_period == self.MONTHLY:
             next_payment = self.last_payment_date + timedelta(weeks=4)
         else:
             next_payment = self.last_payment_date + timedelta(weeks=52)

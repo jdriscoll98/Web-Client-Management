@@ -57,11 +57,8 @@ class AddCost(LoginRequiredMixin, CreateView):
         initial = super(AddCost, self).get_initial()
         initial = initial.copy()
         initial['client'] = self.kwargs.get('pk')
-        try:
-            type = Cost.TYPES.get_value(self.kwargs.get('type'))
-            initial['type'] = type
-        except Exception as e:
-            print(e)
+        type = Cost.TYPES.get_value(self.kwargs.get('type'))
+        initial['type'] = type
         return initial
 
     def get_success_url(self):
