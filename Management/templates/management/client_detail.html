@@ -135,6 +135,14 @@ th {
     window.location.href = $(this).attr('href');
   });
 
+  $('.fa-google').click(function() {
+    window.location.href = $(this).attr('href');
+    })
+
+    $('.fa-github').click(function() {
+      window.location.href = $(this).attr('href');
+      })
+
   $('.fa-trash-alt').click(function() {
     var id = $(this).attr('id');
     if(confirm("Are you sure you want to delete this project?")) {
