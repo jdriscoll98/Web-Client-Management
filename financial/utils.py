@@ -1,4 +1,4 @@
-from financial.models import Cost
+from .models import Cost
 
 
 def get_total_profit():

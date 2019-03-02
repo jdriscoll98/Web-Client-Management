@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 import json
 
 from .utils import *
-from management.utils import get_total_profit
+from management.models import Client
 
 #-------------------------------------------------------------------------------
 # Page Views
@@ -16,13 +16,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'website/homepage.html'
 
     def get_context_data(self, *args, **kwargs):
-        profits, total = get_total_profit()
 
         context = {
-            'elementor_profit':  profits['el'],
-            'server_profit':  profits['sh'],
-            'domain_profit':  profits['do'],
-            'GSuite_profit': profits['gs'],
-            'total': total
+            'clients': Client.objects.all()
                }
         return context

@@ -21,4 +21,5 @@ urlpatterns = [
 	url(r'^auth/', include('core.urls')),
 	url(r'', include('website.urls')),
 	url(r'^management/', include('management.urls', namespace='management')),
+	url(r'^financial/', include('financial.urls', namespace='financial')),
 ]

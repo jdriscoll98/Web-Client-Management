@@ -21,82 +21,30 @@
       </thead>
       <tbody>
         <tr>
-          <th colspan="5"class="text-center">
-            {{ object|title }}
-            </th>
+          <td class="label">Name</td>
+          <td>{{ object.name }}</td>
         </tr>
         <tr>
-          <th>Payment Type</th>
-          <th>Next Payment due</th>
-          <th>Price</th>
-          <th>Client Payment</th>
+          <td class="label">Phone Number</td>
+          <td>{{ object.phone_number }}</td>
         </tr>
-          {% if elementor_cost %}
-          <tr>
-            <td>Elementor</td>
-
-            <td>{{ elementor_cost.get_next_payment|date:"M d, Y" }}</td>
-            <td>${{ elementor_cost.price }}</td>
-            <td>${{ elementor_cost.client_payment}}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="4"><a class="btn btn-success" href="{% url 'management:add_cost' object.pk 'elementor' %}"> Add Elementor Cost</a></td>
-          </tr>
-          {% endif %}
-          <tr>
-          </tr>
-          {% if server_hosting_cost %}
-          <tr>
-            <td>Server Hosting</td>
-
-            <td>{{ server_hosting_cost.get_next_payment|date:"M d, Y" }}</td>
-            <td>${{ server_hosting_cost.price }}</td>
-            <td>${{ server_hosting_cost.client_payment}}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="4">
-              <a class="btn btn-success"
-                  href="{% url 'management:add_cost' object.pk 'server_hosting' %}">
-                  Add Server Hosting Cost</a>
-                </td>
-          </tr>
-          {% endif %}
-          <tr>
-          </tr>
-          {% if domain_cost %}
-          <tr>
-            <td>Domains</td>
-            <td>{{ domain_cost.get_next_payment|date:"M d, Y" }}</td>
-            <td>${{ domain_cost.price }}</td>
-            <td>${{ domain_cost.client_payment}}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="4"> <a class="btn btn-success"
-                href="{% url 'management:add_cost' object.pk 'domains' %}"
-                >
-                Add Domain Cost</a></td>
-          </tr>
-          {% endif %}
-          <tr>
-          </tr>
-          {% if gsuite_cost %}
-          <tr>
-            <td>Gsuite</td>
-
-            <td>{{ gsuite_cost.get_next_payment|date:"M d, Y" }}</td>
-            <td>${{ gsuite_cost.price }}</td>
-            <td>${{ gsuite_cost.client_payment}}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="4"> <a class="btn btn-success"
-                href="{% url 'management:add_cost' object.pk 'gsuite' %}">
-                Add Gsuite Cost</a></td>
-          </tr>
-          {% endif %}
+        <tr>
+          <td class="label">Email</td>
+          <td>{{ object.email }}</td>
+        </tr>
+        <tr>
+          <td class="label">Amount owed</td>
+          <td>${{ object.amount_owed|default_if_none:"0"}}</td>
+        </tr>
+        <tr>
+          <td class="label">Additional Information</td>
+          <td>{{ object.additional_information }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+          <a class="btn btn-success" href="{{ object.folder_link }}">Link to Drive</a>
+          </td>
+        </tr>
       </tbody>
     </table>
 {% endblock content %}
