@@ -5,6 +5,10 @@
   .fa-plus {
     color: var(--primary-color) !important;
   }
+
+#myInput {
+  width: 50%;
+}
 </style>
 {% endblock custom_css %}
 
@@ -25,8 +29,9 @@
             <th colspan="2" class="heading">
               <h2>
           Clients
-          <a class="fas fa-plus" href="{% url 'management:add_client' %}"></a>
+          <i class="fas fa-plus" href="{% url 'management:add_client' %}"></i>
           </h2>
+          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for clients.." title="Type in a client">
           </th>
           </tr>
           </thead>
@@ -59,10 +64,33 @@
 
 {% block js %}
 <script>
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("client-table");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
 //------------------------------------------------------
 $('.client').click(function() {
   window.location.href = $(this).attr('href');
   })
+
+  $('.fa-plus').click(function() {
+    window.location.href = $(this).attr('href');
+    })
 
 $('.fa-trash-alt').click(function() {
   var id = $(this).attr('id');

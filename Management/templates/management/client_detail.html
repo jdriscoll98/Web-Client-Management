@@ -86,9 +86,13 @@ th {
       <tbody>
         {% for project in projects %}
         <tr>
-          <td>{{ project.name }}</td>
+          <td class="project" href="{% url 'management:update_project' pk=project.pk pk2=object.pk %}">{{ project.name }}</td>
           <td><i class="fab fa-google" href=""></i></td>
           <td><i class="fab fa-github" href=""></i></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td style="text-align: center"><h3>No Projects Yet!</h3></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -111,6 +115,10 @@ th {
         <td>{{ payment.amount }}/td>
         <td>{{ payment.date }}</td>
       </tr>
+      {% empty %}
+      <tr>
+        <td style="text-align: center"><h3>No Recent Payments</h3></td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
@@ -121,5 +129,8 @@ th {
 
 {% block js %}
 <script>
+  $('.project').click(function() {
+    window.location.href = $(this).attr('href')
+  })
 </script>
 {% endblock js %}

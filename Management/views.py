@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -55,11 +55,14 @@ class AddProject(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(AddProject, self).get_context_data(**kwargs)
         context['title'] = 'Add Project'
+        context['next'] = reverse('management:detail_client', kwargs={'pk':self.kwargs.get('pk')})
         return context
 
 
     def get_success_url(self, **kwargs):
-        next = self.request.POST.get('next', 'website:homepage')
+        print(self.request.POST.get('next'))
+        next = self.request.POST.get('next', reverse('website:homepage_view'))
+        print(next)
         return next
 
 class DeleteProject(LoginRequiredMixin, DeleteViewAjax):
@@ -67,12 +70,15 @@ class DeleteProject(LoginRequiredMixin, DeleteViewAjax):
 
 class UpdateProject(LoginRequiredMixin, UpdateView):
     model = Project
-    fields = '__all__'
+    template_name = 'management/project_form.html'
+    form_class = ProjectForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Update Project'
+        context['next'] =  reverse('management:detail_client', kwargs={'pk': self.kwargs.get('pk2')})
         return context
 
-class DetailProject(LoginRequiredMixin, DetailView):
-    model = Project
+    def get_success_url(self, **kwargs):
+        next = self.request.POST.get('next', reverse('website:homepage_view'))
+        return next
