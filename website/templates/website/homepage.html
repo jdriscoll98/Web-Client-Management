@@ -14,7 +14,10 @@
   </div>
   <div class="row">
     <div class="col text-center">
-      <h3>Clients</h3>
+      <h3>
+        Clients
+        <a class="fas fa-plus" href="{% url 'management:add' %}"></a>
+      </h3>
       <table>
         {% for client in clients %}
         <tr><td class="client" href="{% url 'management:detail' client.pk %}">{{ client.name }}</td></tr>
@@ -29,7 +32,7 @@
         {% endfor %}
         </table>
     </div>
-    <div class="col text-left">
+    <div class="col text-center">
         <h3>Server Summary</h3>
         <table>
           </table>

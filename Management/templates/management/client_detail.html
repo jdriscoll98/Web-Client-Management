@@ -4,18 +4,31 @@
 <style type="text/css">
 .btn {
   width: 100%;
+  background-color: var(--primary-color) !important;
+}
+.fa-edit {
+    color: var(--primary-color) !important;
+}
+.label {
+  font-weight: bold;
+}
+.heading {
+  text-align: center;
 }
 </style>
 {% endblock custom_css %}
 
 {% block content %}
+<div class="container">
 <div class="row">
   <div class="col-md-8 offset-md-2">
     <table class="table">
       <thead>
         <tr>
           <th colspan="5" class="heading">
-            <h2>Client</h2>
+            <h2>Client
+              <a class="fas fa-edit" href="{% url 'management:update' object.pk %}"></a>
+            </h2>
           </th>
         </tr>
       </thead>
@@ -42,11 +55,13 @@
         </tr>
         <tr>
           <td colspan="2">
-          <a class="btn btn-success" href="{{ object.folder_link }}">Link to Drive</a>
+          <a class="btn btn-primary" href="{{ object.folder_link }}">Link to Drive</a>
           </td>
         </tr>
       </tbody>
     </table>
+</div>
+</div>
 {% endblock content %}
 
 {% block js %}

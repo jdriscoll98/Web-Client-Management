@@ -13,12 +13,22 @@ class AddClient(LoginRequiredMixin, CreateView):
     fields = '__all__'
     success_url = reverse_lazy('management:homepage')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Client'
+        return context
+
 class DeleteClient(LoginRequiredMixin, DeleteViewAjax):
     model = Client
 
 class UpdateClient(LoginRequiredMixin, UpdateView):
     model = Client
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Client'
+        return context
 
 class DetailClient(LoginRequiredMixin, DetailView):
     model = Client
