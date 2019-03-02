@@ -1,12 +1,17 @@
 {% extends 'website/base.html' %}
 
 {% block custom_css %}
+<style>
+  .fa-plus {
+    color: var(--primary-color) !important;
+  }
+</style>
 {% endblock custom_css %}
 
 {% block content %}
 {% include 'website/server_messages.html' %}
 
-<div class="container-fluid">
+<div class="container">
   <div class="row">
     <div class="col text-center">
       <h2 class="title">Welcome to Tech and Mech Client Management</h2><br/>
