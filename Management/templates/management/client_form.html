@@ -19,6 +19,7 @@
 {% endblock custom_css %}
 
 {% block content %}
+{% include 'website/server_messages' %}
 <div class="container">
   <form method="POST">{% csrf_token %}
 <div class="row">

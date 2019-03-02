@@ -30,6 +30,7 @@ th {
 {% endblock custom_css %}
 
 {% block content %}
+{% include 'website/server_messages.html' %}
 <div class="container">
 <div class="row">
   <div class="col-md-4 ">
@@ -73,7 +74,7 @@ th {
     </table>
 </div>
   <div class="col-md-4">
-    <table class="table">
+    <table id="project-table" class="table">
       <thead>
         <tr>
           <th colspan="5" class="heading">
@@ -85,10 +86,11 @@ th {
       </thead>
       <tbody>
         {% for project in projects %}
-        <tr>
+        <tr id="row-{{ project.pk }}">
           <td class="project" href="{% url 'management:update_project' pk=project.pk pk2=object.pk %}">{{ project.name }}</td>
-          <td><i class="fab fa-google" href=""></i></td>
-          <td><i class="fab fa-github" href=""></i></td>
+          <td><i class="fab fa-google" href="{{ project.folder_link}}"></i></td>
+          <td><i class="fab fa-github" href="{{ project.github_link }}"></i></td>
+          <td><i id="{{ project.pk }}" class="fas fa-trash-alt" href="{% url 'management:delete_project' project.pk %}"></i></td>
         </tr>
         {% empty %}
         <tr>
@@ -130,7 +132,23 @@ th {
 {% block js %}
 <script>
   $('.project').click(function() {
-    window.location.href = $(this).attr('href')
-  })
+    window.location.href = $(this).attr('href');
+  });
+
+  $('.fa-trash-alt').click(function() {
+    var id = $(this).attr('id');
+    if(confirm("Are you sure you want to delete this project?")) {
+      $.get($(this).attr('href'), {}, function(data) {
+        if(data.deleted) {
+          $('#project-table #row-' + id).remove();
+          location.reload();
+        }
+        else {
+          alert("Could not delete project at this time!");
+        }
+      });
+    }
+  });
+
 </script>
 {% endblock js %}
