@@ -9,6 +9,17 @@
 .fa-edit {
     color: var(--primary-color) !important;
 }
+.fa-plus {
+  color: var(--primary-color) !important;
+}
+thead {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+th {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
 .label {
   font-weight: bold;
 }
@@ -21,7 +32,7 @@
 {% block content %}
 <div class="container">
 <div class="row">
-  <div class="col-md-8 offset-md-2">
+  <div class="col-md-4 ">
     <table class="table">
       <thead>
         <tr>
@@ -61,14 +72,13 @@
       </tbody>
     </table>
 </div>
-<div class="row">
-  <div class="col-md-8 offset-md-2">
+  <div class="col-md-4">
     <table class="table">
       <thead>
         <tr>
           <th colspan="5" class="heading">
             <h2>Projects
-              <a class="fas fa-plus" href="{% url 'management:update_client' object.pk %}"></a>
+              <a class="fas fa-plus" href="{% url 'management:add_project' pk=object.pk %}"></a>
             </h2>
           </th>
         </tr>
@@ -83,6 +93,28 @@
         {% endfor %}
       </tbody>
     </table>
+</div>
+<div class="col-md-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th colspan="5" class="heading">
+          <h2>Recent Payments
+          </h2>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in recent_payments %}
+      <tr>
+        <td>{{ payment.name }}</td>
+        <td>{{ payment.amount }}/td>
+        <td>{{ payment.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
 </div>
 </div>
 {% endblock content %}

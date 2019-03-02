@@ -7,11 +7,12 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from .models import Client, Project
 from .mixins import DeleteViewAjax
+from .forms import ProjectForm
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
     model = Client
     fields = '__all__'
-    success_url = reverse_lazy('management:homepage')
+    success_url = reverse_lazy('website:homepage_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,16 +41,25 @@ class DetailClient(LoginRequiredMixin, DetailView):
     # project
 
 class AddProject(LoginRequiredMixin, CreateView):
-    model = Project
-    fields = '__all__'
+    template_name = 'management/project_form.html'
+    form_class = ProjectForm
+
+    def get_initial(self, **kwargs):
+        initial = super(AddProject, self).get_initial()
+        try:
+            initial['client'] = Client.objects.get(pk=self.kwargs.get('pk'))
+        except Exception as e:
+            print(e)
+        return initial
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Add Client'
+        context = super(AddProject, self).get_context_data(**kwargs)
+        context['title'] = 'Add Project'
         return context
 
+
     def get_success_url(self, **kwargs):
-        next = request.POST.get('next', 'website:homepage')
+        next = self.request.POST.get('next', 'website:homepage')
         return next
 
 class DeleteProject(LoginRequiredMixin, DeleteViewAjax):
