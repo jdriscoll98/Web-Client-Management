@@ -27,7 +27,7 @@
         <tr>
           <th colspan="5" class="heading">
             <h2>Client
-              <a class="fas fa-edit" href="{% url 'management:update' object.pk %}"></a>
+              <a class="fas fa-edit" href="{% url 'management:update_client' object.pk %}"></a>
             </h2>
           </th>
         </tr>
@@ -58,6 +58,29 @@
           <a class="btn btn-primary" href="{{ object.folder_link }}">Link to Drive</a>
           </td>
         </tr>
+      </tbody>
+    </table>
+</div>
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="5" class="heading">
+            <h2>Projects
+              <a class="fas fa-plus" href="{% url 'management:update_client' object.pk %}"></a>
+            </h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr>
+          <td>{{ project.name }}</td>
+          <td><i class="fab fa-google" href=""></i></td>
+          <td><i class="fab fa-github" href=""></i></td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
 </div>

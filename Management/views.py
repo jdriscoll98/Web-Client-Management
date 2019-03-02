@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
-from .models import Client
+from .models import Client, Project
 from .mixins import DeleteViewAjax
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
@@ -32,4 +32,37 @@ class UpdateClient(LoginRequiredMixin, UpdateView):
 
 class DetailClient(LoginRequiredMixin, DetailView):
     model = Client
-    # cost views
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['projects'] = Project.objects.filter(client=self.object)
+        return context
+    # project
+
+class AddProject(LoginRequiredMixin, CreateView):
+    model = Project
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Client'
+        return context
+
+    def get_success_url(self, **kwargs):
+        next = request.POST.get('next', 'website:homepage')
+        return next
+
+class DeleteProject(LoginRequiredMixin, DeleteViewAjax):
+    model = Project
+
+class UpdateProject(LoginRequiredMixin, UpdateView):
+    model = Project
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Project'
+        return context
+
+class DetailProject(LoginRequiredMixin, DetailView):
+    model = Project

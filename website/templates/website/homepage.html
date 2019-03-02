@@ -21,11 +21,11 @@
     <div class="col text-center">
       <h3>
         Clients
-        <a class="fas fa-plus" href="{% url 'management:add' %}"></a>
+        <a class="fas fa-plus" href="{% url 'management:add_client' %}"></a>
       </h3>
       <table>
         {% for client in clients %}
-        <tr><td class="client" href="{% url 'management:detail' client.pk %}">{{ client.name }}</td></tr>
+        <tr><td class="client" href="{% url 'management:detail_client' client.pk %}">{{ client.name }}</td></tr>
         {% endfor %}
         </table>
     </div>
