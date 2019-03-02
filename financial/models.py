@@ -16,7 +16,7 @@ class Cost(models.Model):
         elementor =  ('el', 'Elementor')
         server_hosting =  ('sh', 'Server Hosting')
         domains = ('do', 'Domains')
-        gsuite = ('gs', 'GSuite')
+        other = ('ot', 'Other')
         @classmethod
         def get_value(cls, member):
             return cls[member].value[0]
@@ -68,3 +68,8 @@ class Cost(models.Model):
         else:
             next_payment = self.last_payment_date + timedelta(weeks=52)
         return next_payment
+
+class Payment(models.Model):
+    cost = models.ForeignKey(Cost, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField()
+    date_paid = models.DateTimeField(auto_now=True)

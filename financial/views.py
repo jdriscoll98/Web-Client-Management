@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
-from .models import Cost, Service
+from .models import Cost, Service, Payment
 from .mixins import DeleteViewAjax
 # Create your views here.
 class AddCost(LoginRequiredMixin, CreateView):
