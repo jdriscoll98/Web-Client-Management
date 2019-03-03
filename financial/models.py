@@ -55,7 +55,7 @@ class Cost(models.Model):
     project = models.ForeignKey('management.Project', blank=True, null=True, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
     client_payment = models.IntegerField()
-    last_payment_date = models.DateTimeField()
+    last_payment_date = models.DateTimeField(auto_now=True)
     payment_period = models.CharField(max_length=2, choices=PAYMENT_PEROID, default=BIWEEKLY)
 
 

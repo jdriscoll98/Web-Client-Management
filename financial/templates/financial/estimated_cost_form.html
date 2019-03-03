@@ -58,7 +58,7 @@ th {
       </thead>
       <tbody>
             <tr><th>Client: </th><td>
-                <select id="client" name="client">
+                <select id="client" name="client" required>
                     <option selected>------------</option>
                   {% for client in clients %}
                     <option value="{{ client }}" name="client">{{ client }}</option>
@@ -67,10 +67,10 @@ th {
                 </td>
                 </tr>
                 <tr><th>Project: </th><td>
-                    <select id="project" name="project">
+                    <select id="project" name="project" required>
                         <option selected>------------</option>
                       {% for project in projects %}
-                        <option value="{{ project.client }}" name="project">{{ project }}</option>
+                        <option id="{{ project.client }}" value="{{ project }}" name="project">{{ project }}</option>
                       {% endfor %}
                     </select>
                     </td>
@@ -92,7 +92,7 @@ th {
       <tbody>
         {% for service in services %}
         <tr><th>{{ service|title }} Hours: </th><td>
-        <input id="{{ service.cost_per_hour }}" class="value" type="number" name="{{ service }}"></input></td></tr>
+        <input id="{{ service.cost_per_hour }}" class="value" type="number" name="{{ service }}" value="0" required></input></td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -109,7 +109,7 @@ th {
       <tbody class="extras">
         {% for type in types %}
         <tr><th>{{ type.1 }} </th><td>
-        <input id="1" class="value" type="number" name="{{ type.1 }}"></input></td></tr>
+        <input id="1" class="value" type="number" value="0" name="{{ type.1 }}" required></input></td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -139,7 +139,7 @@ th {
     $('#client').change(function() {
         $('#project').html(sel2);
         $('#project option').each(function() {
-            if ($(this).val() != $('#client').val()) $(this).remove();
+            if ($(this).attr('id') != $('#client').val()) $(this).remove();
         });
     });
     //------------------------------------------------------------------------

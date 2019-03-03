@@ -8,6 +8,8 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
+from .utils import create_costs
+
 from .forms import EstimatedCostForm
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
@@ -80,5 +82,6 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
 
     def post(self, *args, **kwargs):
         data = self.request.POST
-        # create_costs(data)
-        return reverse('website:homepage_view')
+        if create_costs(data):
+            return redirect(reverse('website:homepage_view'))
+        return redirect(reverse('financial:estimate'))
