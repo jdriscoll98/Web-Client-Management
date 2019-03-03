@@ -35,6 +35,15 @@ th {
 .heading {
   text-align: center;
 }
+.title {
+  background-color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
+
+  border-radius: 10px;
+  padding: 10px;
+  padding-bottom: 15px;
+
+}
 </style>
 {% endblock custom_css %}
 
@@ -44,7 +53,7 @@ th {
 <div class="container">
   <div class="row">
     <div class="col text-center">
-      <h2 class="title">Welcome to Tech and Mech Client Management</h2><br/>
+      <h1 class="title">Tech and Mech Client Management</h1><br/>
     </div>
   </div>
   <div class="row">
@@ -70,7 +79,7 @@ th {
         </tbody>
         </table>
     </div>
-    <div class="col-md-4 text-center">
+    <div class="col text-center">
       <table class="table">
         <thead>
         <tr><th class="heading" colspan="2">
@@ -111,12 +120,6 @@ th {
               </td>
         </tbody>
         </table>
-    </div>
-    <div class="col-md-4 text-center">
-        <table class="table">
-          <tr><th>
-          <h3>Server Summary</h3></th></tr>
-          </table>
     </div>
 </div>
 
