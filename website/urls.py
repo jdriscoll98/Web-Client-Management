@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 
-from .views import *
+from .views import HomePageView
 
 # Application Routes (URLs)
 

@@ -92,18 +92,24 @@ th {
           {% else %}
           <td>$0</td>
           {% endif %}
-        <tr><th>Servers</th>
+        <tr><th>Servers:</th>
           {% if servers %}
           <td class="value" value="{{ servers }}">${{ servers }}</td>
           {% else %}
           <td>$0</td>
           {% endif %}
-        <tr><th>Other</th>
+        <tr><th>Other:</th>
           {% if other %}
           <td class="value" value="{{ other }}">${{ other }}</td>
           {% else %}
           <td>$0</td>
           {% endif %}
+          <tr style="border-top: 1px solid black;">
+            <th>
+              Total:
+            </th>
+            <td class="value">${{ total }}
+              </td>
         </tbody>
         </table>
     </div>
@@ -127,9 +133,9 @@ $(document).ready(function(){
     });
   });
 });
-$( window ).on('load', function() {
+$(document).ready(function() {
   $('.value').each(function(index, object){
-    if(parseInt($(this).html().substring(1)) > 0 ) {
+    if(parseInt($(this).html().substring(1)) >= 0 ) {
         $(this).css("color","green");
     }
     else {

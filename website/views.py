@@ -5,8 +5,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 import json
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .utils import *
+
+from .utils import get_profit, get_total
 from management.models import Client
 from financial.models import Cost
 
@@ -24,9 +28,10 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         context = {
             'clients': Client.objects.all(),
-            'elementor': sum((cost.client_payment - cost.price) for cost in Cost.objects.filter(type=elementor)),
-            'domains': sum((cost.client_payment - cost.price) for cost in  Cost.objects.filter(type=domains)),
-            'servers': sum((cost.client_payment - cost.price) for cost in Cost.objects.filter(type=servers)),
-            'other': sum((cost.client_payment - cost.price) for cost in Cost.objects.filter(type=other)),
+            'elementor': get_profit(elementor),
+            'domains': get_profit(domains),
+            'servers': get_profit(servers),
+            'other': get_profit(other),
+            'total': get_total()
                }
         return context
