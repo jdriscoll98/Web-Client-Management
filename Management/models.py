@@ -41,3 +41,6 @@ class Project(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     github_link = models.URLField(blank=True, null=True)
     folder_link = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name

@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
+from management.models import Client, Project
 from .mixins import DeleteViewAjax
 from .forms import EstimatedCostForm
 # Create your views here.
@@ -46,6 +47,8 @@ class ListCost(LoginRequiredMixin, ListView):
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {
-            'services' : Service.objects.all()
+            'services' : Service.objects.all(),
+            'clients' : Client.objects.all(),
+            'projects': Project.objects.all(),
         }
         return render(self.request, 'financial/estimated_cost_form.html', context)
