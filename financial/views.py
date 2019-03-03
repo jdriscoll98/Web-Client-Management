@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
+from .forms import EstimatedCostForm
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
 # Create your views here.
@@ -73,5 +74,11 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
             'services' : Service.objects.all(),
             'clients' : Client.objects.all(),
             'projects': Project.objects.all(),
+            'types': [x.value for x in Cost.TYPES if x.value[0] != 'pj' ]
         }
         return render(self.request, 'financial/estimated_cost_form.html', context)
+
+    def post(self, *args, **kwargs):
+        data = self.request.POST
+        create_costs(data)
+        return reverse('website:homepage_view')

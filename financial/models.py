@@ -23,6 +23,8 @@ class Cost(models.Model):
         server_hosting =  ('sh', 'Server Hosting')
         domains = ('do', 'Domains')
         project = ('pj', 'Project')
+        plugin = ('pl', 'Plugin')
+        theme = ('th', 'Theme')
         @classmethod
         def get_value(cls, member):
             return cls[member].value[0]
