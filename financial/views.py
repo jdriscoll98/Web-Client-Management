@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views import View
 
 from .models import Cost, Service, Payment
 from .mixins import DeleteViewAjax
@@ -42,6 +43,9 @@ class ListCost(LoginRequiredMixin, ListView):
         context['title'] = Cost.TYPES.get_label(self.kwargs.get('type'))
         return context
 
-class EstimatedCostGenerator(LoginRequiredMixin, FormView):
-    template_name = 'financial/estimated_cost_form.html'
-    form_class = EstimatedCostForm
+class EstimatedCostGenerator(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        context = {
+            'services' : Service.objects.all()
+        }
+        return render(self.request, 'financial/estimated_cost_form.html', context)

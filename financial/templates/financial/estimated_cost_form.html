@@ -55,7 +55,12 @@ th {
         </tr>
       </thead>
       <tbody>
-                {{form.as_table }}
+        <form action="" method="POST">
+            {% for service in services %}
+            <tr><th>{{ service|title }}: </th><td><input class="value" type="number" name="{{service}}"></td></tr>
+            {% endfor %}
+            <tr><th>Total</th><td><input type="number" name="total" readonly></input>
+        </form>
       </tbody>
     </table>
     <button id="save" type="submit" value="save" class="btn btn-success">Save Client</button>
@@ -67,5 +72,10 @@ th {
 
 {% block js %}
 <script>
+  $(document).ready(function() {
+    $('.value').keyup(function() {
+
+    })
+  })
 </script>
 {% endblock js %}
