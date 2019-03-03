@@ -1,6 +1,43 @@
 {% extends 'website/base.html' %}
 
 {% block custom_css %}
+<style>
+  .fa-plus {
+    color: var(--primary-color) !important;
+  }
+
+#myInput {
+  width: 50%;
+  border-radius: 10px;
+  border-color: var(--secondary-color) !important;
+  outline: none;
+}
+.btn {
+  width: 100%;
+  background-color: var(--primary-color) !important;
+}
+.fa-edit {
+    color: var(--primary-color) !important;
+}
+.fa-plus {
+  color: var(--primary-color) !important;
+}
+thead {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+th {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.label {
+  font-weight: bold;
+}
+.heading {
+  text-align: center;
+}
+
+  </style>
 {% endblock custom_css %}
 
 {% block content %}
@@ -8,15 +45,12 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>
-        Summary of Costs
-      </h1>
       <table id="cost-table class="table">
         <thead>
           <tr>
             <th colspan="4" class="heading">
               <h2 id="type">
-                {{ type }} <!-- this will change depending on select -->
+                {{ title }}
               </h2>
             </th>
           </tr>
@@ -28,9 +62,9 @@
             <th>Price</th>
             <th>Client Payment</th>
           </tr>
-          {% for cost in costs %}
+          {% for cost in object_list|dictsort:"client.name" %}
             <tr>
-              <td><a href="{% url 'management:client_detail' cost.client.pk %}"> {{ cost.client }}</a></td>
+              <td><a href="{% url 'management:detail_client' cost.client.pk %}"> {{ cost.client }}</a></td>
               <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
               <td>${{ cost.price }}</td>
               <td>${{ cost.client_payment}}</td>
@@ -45,10 +79,6 @@
 
 {% block js %}
 <script>
-//  redirect to a cost page
-$(".cost").change(function(){
-  window.location.href = $(this).val()
-});
 //------------------------------------------------------
 </script>
 {% endblock js %}

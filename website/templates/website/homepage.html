@@ -76,29 +76,30 @@ th {
       <table class="table">
         <thead>
         <tr><th class="heading" colspan="2">
-        <h3>Costs Summary</h3></th></tr>
+        <h2>Costs Summary <i class="fa fa-plus" href="{% url 'financial:add' %}"></i></h2>
+        </th></tr>
         </thead>
         <tbody>
 
-        <tr><th>Elementor:</th>
+        <tr><th class="cost" href="{% url 'financial:list' 'elementor' %}">Elementor:</th>
           {% if elementor %}
-          <td class="value">${{ elementor }}</td>
+          <td class="value"s>${{ elementor }}</td>
           {% else %}
           <td>$0</td>
           {% endif %}
-        <tr><th>Domains:</th>
+        <tr><th class="cost" href="{% url 'financial:list' 'domains' %}">Domains:</th>
           {% if domains %}
           <td class="value" value="{{ domains }}">${{ domains }}</td>
           {% else %}
           <td>$0</td>
           {% endif %}
-        <tr><th>Servers:</th>
+        <tr><th class="cost" href="{% url 'financial:list' 'server_hosting' %}">Servers:</th>
           {% if servers %}
           <td class="value" value="{{ servers }}">${{ servers }}</td>
           {% else %}
           <td>$0</td>
           {% endif %}
-        <tr><th>Other:</th>
+        <tr><th class="cost" href="{% url 'financial:list' 'other' %}">Other:</th>
           {% if other %}
           <td class="value" value="{{ other }}">${{ other }}</td>
           {% else %}
@@ -145,6 +146,9 @@ $(document).ready(function() {
 });
 
 //------------------------------------------------------
+$('.cost').click(function() {
+  window.location.href = $(this).attr('href')
+})
 $('.client').click(function() {
   window.location.href = $(this).attr('href');
   })

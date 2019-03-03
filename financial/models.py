@@ -9,6 +9,9 @@ class Service(models.Model):
     name = models.CharField(max_length=100, unique="True")
     cost_per_hour = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def __str__(self):
+        return self.name
+
 class Cost(models.Model):
     #choices style from Two scoops of Django 1.11 best practice
     #lets you loop through choices easily
