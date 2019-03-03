@@ -143,32 +143,6 @@ th {
         });
     });
     //------------------------------------------------------------------------
-    $(document).ready(function() {
-    var max_fields = 10;
-    var wrapper = $(".extras");
-    var add_button = $(".add_form_field");
-
-    var x = 1;
-    $(add_button).click(function(e) {
-      e.preventDefault()
-        if (x < max_fields) {
-            x++;
-            $(wrapper).append('<tr><td><input class="new-label" type="text" name=""></td><td><input id="1.00" class="new-value value" type="text" name=""/></td><td><a href="#" class="fas fa-trash-alt delete"></a></td></tr>');
-            $('.new-label').attr('name', 'name'+x);
-            $('.new-label').removeClass('new-label');
-            $('.new-value').attr('name', 'value'+x);
-            $('.new-value').removeClass('new-value');
-        } else {
-            alert('You Reached the limits')
-        }
-    });
-
-    $(wrapper).on("click", ".delete", function(e) {
-        e.preventDefault();
-        $(this).closest('tr').remove();
-        x--;
-    })
-});
 
 </script>
 {% endblock js %}

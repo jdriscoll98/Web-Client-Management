@@ -80,5 +80,5 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
 
     def post(self, *args, **kwargs):
         data = self.request.POST
-        create_costs(data)
+        # create_costs(data)
         return reverse('website:homepage_view')
