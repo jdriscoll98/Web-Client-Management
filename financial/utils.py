@@ -4,7 +4,6 @@ from management.models import Client, Project
 def create_costs(data):
     try:
         client = Client.objects.get(name=data['client'])
-        print(data['project'])
         project = Project.objects.get(name=data['project'])
         project_cost = 0
         for service in Service.objects.all():
@@ -13,40 +12,60 @@ def create_costs(data):
         project_cost += int(data['Plugin'])
         project_cost += int(data['Theme'])
         type = Cost.TYPES.get_value('project')
-        Cost.objects.create(
+        cost, created = Cost.objects.get_or_create(
             client=client,
             project=project,
             type=type,
-            price= 0,
-            client_payment = project_cost,
-            payment_period = 'wk')
+            defaults={
+            "price": 0,
+            "client_payment": project_cost,
+            'payment_period': 'wk'
+            })
+        if not created:
+            cost.client_payment += project_cost
+            cost.save()
         server_hosting = Cost.TYPES.get_value('server_hosting')
         domains = Cost.TYPES.get_value('domains')
         elementor = Cost.TYPES.get_value('elementor')
-        Cost.objects.create(
+        cost, created = Cost.objects.get_or_create(
             client=client,
-            project=project,
             type=server_hosting,
-            price=0,
-            client_payment = int(data['Server Hosting']),
-            payment_period = 'mo'
+            defaults={
+                "project": project,
+                "price": 0,
+                "client_payment": int(data['Server Hosting']),
+                "payment_period": 'mo',
+            }
         )
-        Cost.objects.create(
+        if not created:
+            cost.client_payment += int(data['Server Hosting'])
+            cost.save()
+        cost, created = Cost.objects.get_or_create(
             client=client,
-            project=project,
             type=domains,
-            price=0,
-            client_payment = int(data['Domains']),
-            payment_period = 'mo'
+            defaults={
+                "project": project,
+                "price": 0,
+                "client_payment": int(data['Domains']),
+                "payment_period": 'an',
+            }
         )
-        Cost.objects.create(
+        if not created:
+            cost.client_payment += int(data['Domains'])
+            cost.save()
+        cost, created = Cost.objects.get_or_create(
             client=client,
-            project=project,
             type=elementor,
-            price=0,
-            client_payment = int(data['Elementor']),
-            payment_period = 'mo'
+            defaults={
+                "project": project,
+                "price": 0,
+                "client_payment": int(data['Elementor']),
+                "payment_period": 'an',
+            }
         )
+        if not created:
+            cost.client_payment += int(data['Elementor'])
+            cost.save()
         return True
     except Exception as e:
         print(e)

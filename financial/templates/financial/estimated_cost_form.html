@@ -91,7 +91,7 @@ th {
       </thead>
       <tbody>
         {% for service in services %}
-        <tr><th>{{ service|title }} Hours: </th><td>
+        <tr><th>{{ service }} Hours: </th><td>
         <input id="{{ service.cost_per_hour }}" class="value" type="number" name="{{ service }}" value="0" required></input></td></tr>
         {% endfor %}
       </tbody>
