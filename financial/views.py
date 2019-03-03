@@ -10,7 +10,6 @@ from django.views import View
 from .models import Cost, Service, Payment
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
-from .forms import EstimatedCostForm
 # Create your views here.
 class AddCost(LoginRequiredMixin, CreateView):
     model = Cost

@@ -44,6 +44,7 @@ th {
 {% endblock custom_css %}
 
 {% block content %}
+<form action="" method="POST">
 <div class="container">
 <div class="row">
   <div class="col-md-8 col-lg-4">
@@ -57,19 +58,19 @@ th {
       </thead>
       <tbody>
             <tr><th>Client: </th><td>
-                <select id="client">
+                <select id="client" name="client">
                     <option selected>------------</option>
                   {% for client in clients %}
-                    <option value="{{ client }}">{{ client }}</option>
+                    <option value="{{ client }}" name="client">{{ client }}</option>
                   {% endfor %}
                 </select>
                 </td>
                 </tr>
                 <tr><th>Project: </th><td>
-                    <select id="project">
+                    <select id="project" name="project">
                         <option selected>------------</option>
                       {% for project in projects %}
-                        <option value="{{ project.client }}">{{ project }}</option>
+                        <option value="{{ project.client }}" name="project">{{ project }}</option>
                       {% endfor %}
                     </select>
                     </td>
@@ -90,7 +91,8 @@ th {
       </thead>
       <tbody>
         {% for service in services %}
-        <tr><th>{{ service|title }} Hours: </th><td><input class="value" type="number" name="{{ service.cost_per_hour }}"></input>
+        <tr><th>{{ service|title }} Hours: </th><td>
+        <input id="{{ service.cost_per_hour }}" class="value" type="number" name="{{ service }}"></input></td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -118,6 +120,7 @@ th {
     </div>
 </div>
 </div>
+</form>
 {% endblock content %}
 
 {% block js %}
@@ -129,7 +132,7 @@ th {
           if (isNaN(parseInt($(this).val()))) {
           }
           else {
-              total += (parseInt($(this).val()) * parseInt($(this).attr("name")));
+              total += (parseInt($(this).val()) * parseInt($(this).attr("id")));
               console.log(total);
           }
       });
@@ -154,7 +157,11 @@ th {
       e.preventDefault()
         if (x < max_fields) {
             x++;
-            $(wrapper).append('<tr><td><input type="text" name="label"/></td><td><input class="value" type="text" name="1.00"/></td><td><a href="#" class="fas fa-trash-alt delete"></a></td></tr>'); //add input box
+            $(wrapper).append('<tr><td><input class="new-label" type="text" name=""></td><td><input id="1.00" class="new-value value" type="text" name=""/></td><td><a href="#" class="fas fa-trash-alt delete"></a></td></tr>');
+            $('.new-label').attr('name', 'name'+x);
+            $('.new-label').removeClass('new-label');
+            $('.new-value').attr('name', 'value'+x);
+            $('.new-value').removeClass('new-value');
         } else {
             alert('You Reached the limits')
         }
