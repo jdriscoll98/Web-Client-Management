@@ -15,7 +15,8 @@ from .forms import EstimatedCostForm
 class AddCost(LoginRequiredMixin, CreateView):
     model = Cost
     fields = '__all__'
-    success_url = reverse_lazy('website:homepage')
+    success_url = reverse_lazy('website:homepage_view')
+
     def get_initial(self):
         initial = super(AddCost, self).get_initial()
         initial = initial.copy()
@@ -43,6 +44,15 @@ class ListCost(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = Cost.TYPES.get_label(self.kwargs.get('type'))
         return context
+
+class AddService(LoginRequiredMixin, CreateView):
+    model = Service
+    fields = '_all__'
+
+class ListServices(LoginRequiredMixin, ListView):
+    model = Cost
+    paginate_by = 100
+    queryset = Service.objects.all()
 
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):

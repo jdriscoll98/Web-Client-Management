@@ -13,4 +13,6 @@ urlpatterns = [
 		url(r'^update-cost/(?P<pk>\d+)/$', UpdateCost.as_view(), name='update'),
 		url(r'^list-cost/(?P<type>\w+)/$', ListCost.as_view(), name='list'),
 		url(r'^estimate-cost/$', EstimatedCostGenerator.as_view(), name='estimate'),
+		url(r'^add-service/$', AddService.as_view(), name='add_service'),
+		url(r'^services/$', ListServices.as_view(), name='services_list'),
 ]

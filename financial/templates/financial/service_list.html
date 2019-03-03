@@ -50,27 +50,24 @@ th {
           <tr>
             <th colspan="4" class="heading">
               <h2 id="type">
-                {{ title }}
+                Services
+                <i class='fa fa-plus' href="{% url 'financial:add_service' %}"></i>
               </h2>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>Client Name</th>
-            <th>Next Payment due</th>
-            <th>Price</th>
-            <th>Client Payment</th>
+            <th>Service</th>
+            <th>Hourly Rate</th>
           </tr>
-          {% for cost in object_list|dictsort:"client.name" %}
+          {% for service in object_list %}
             <tr>
-              <td><strong class="client" href="{% url 'management:detail_client' cost.client.pk %}"> {{ cost.client }}</strong></td>
-              <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
-              <td>${{ cost.price }}</td>
-              <td>${{ cost.client_payment}}</td>
+              <td>{{ service.name }}</td>
+              <td>{{ service.cost_per_hour }}</td>
             </tr>
           {% endfor %}
-            <tr>{{ profits }}</tr>
+          </tbody>
       </table>
     </div>
   </div>
@@ -80,8 +77,8 @@ th {
 {% block js %}
 <script>
 //------------------------------------------------------
-$('.client').click(function() {
-  window.location.href = $(this).attr('href');
+$('.fa-plus').click(function() {
+  window.location.href = $(this).attr("href");
 })
 </script>
 {% endblock js %}

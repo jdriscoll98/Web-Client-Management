@@ -12,6 +12,9 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('financial:services_list')
+
 class Cost(models.Model):
     #choices style from Two scoops of Django 1.11 best practice
     #lets you loop through choices easily
