@@ -50,6 +50,7 @@ class Cost(models.Model):
 
     client = models.ForeignKey('management.Client', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=[x.value for x in TYPES])
+    other = models.CharField(max_length=100, blank=True, null=True)
     price = models.PositiveIntegerField()
     client_payment = models.IntegerField()
     last_payment_date = models.DateTimeField()

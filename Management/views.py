@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
 from .models import Client, Project
+from financial.models import Cost
 from .mixins import DeleteViewAjax
 from .forms import ProjectForm
 # client views
@@ -37,6 +38,7 @@ class DetailClient(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['projects'] = Project.objects.filter(client=self.object)
+        context['client_costs'] = Cost.objects.filter(client=self.object)
         return context
     # project
 

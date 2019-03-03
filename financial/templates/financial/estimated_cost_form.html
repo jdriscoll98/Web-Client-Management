@@ -38,7 +38,7 @@ th {
 }
  .value {
    float: right;
-   width: 25%;
+   width: 50%;
  }
 </style>
 {% endblock custom_css %}
@@ -46,18 +46,16 @@ th {
 {% block content %}
 <div class="container">
 <div class="row">
-  <div class="col-md-8 offset-md-2">
-    <form method="POST">{% csrf_token %}
+  <div class="col-md-8 col-lg-4">
     <table class="table">
       <thead>
         <tr>
           <th colspan="2" class="heading">
-            <h2> Cost</h2>
+            <h2>Client Informtation</h2>
           </th>
         </tr>
       </thead>
       <tbody>
-        <form action="" method="POST">
             <tr><th>Client: </th><td>
                 <select id="client">
                     <option selected>------------</option>
@@ -76,23 +74,55 @@ th {
                     </select>
                     </td>
                     </tr>
-            {% for service in services %}
-            <tr><th>{{ service|title }} Hours: </th><td><input class="value" type="number" name="{{ service.cost_per_hour }}"></input>
-            {% endfor %}
             <tr><th>Total</th><td><text style="text-align: right; float: right;" class="total"></text></td></tr>
-                    </form>
       </tbody>
     </table>
     <button id="save" type="submit" value="save" class="btn btn-success">Add Cost</button>
-  </form>
-</div>
+    </div>
+    <div class="col-md-8 col-lg-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2" class="heading">
+            <h2>Hourly Costs</h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+        <tr><th>{{ service|title }} Hours: </th><td><input class="value" type="number" name="{{ service.cost_per_hour }}"></input>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class="col-md-8 col-lg-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="3" class="heading">
+            <h2>Extra Costs</h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="extras">
+        <tr><th colspan="2">
+          <button class="btn btn-success add_form_field">Add Extra Cost
+          </button></th>
+        </tr>
+        <tr>
+          <th>Label</th>
+          <th>Price</th>
+        </tr>
+      </tbody>
+    </table>
+    </div>
 </div>
 </div>
 {% endblock content %}
 
 {% block js %}
 <script>
-    $('.value').on("input", function() {
+    $('.value').on("keyup", function() {
       var total = 0;
         $('.value').each(function(){
           console.log($(this).val())
@@ -113,6 +143,29 @@ th {
             if ($(this).val() != $('#client').val()) $(this).remove();
         });
     });
+    //------------------------------------------------------------------------
+    $(document).ready(function() {
+    var max_fields = 10;
+    var wrapper = $(".extras");
+    var add_button = $(".add_form_field");
+
+    var x = 1;
+    $(add_button).click(function(e) {
+        e.preventDefault();
+        if (x < max_fields) {
+            x++;
+            $(wrapper).append('<tr><td><input type="text" name="label"/></td><td><input class="value" type="text" name="1.00"/></td><td><a href="#" class="fas fa-trash-alt delete"></a></td></tr>'); //add input box
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
+        x--;
+    })
+});
 
 </script>
 {% endblock js %}

@@ -34,6 +34,10 @@ class Client(models.Model):
             pass
         return cost.get_total_cost()
 
+    def get_amount_owed(self):
+        total = sum(cost.client_payment for cost in Cost.objects.filter(client=self))
+        return total
+
 
 
 class Project(models.Model):

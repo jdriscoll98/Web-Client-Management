@@ -60,11 +60,13 @@ th {
           <tr>
             <th>Service</th>
             <th>Hourly Rate</th>
+            <th>Edit</th>
           </tr>
           {% for service in object_list %}
             <tr>
               <td>{{ service.name }}</td>
               <td>{{ service.cost_per_hour }}</td>
+              <td><i class="fas fa-edit" href="{% url 'financial:update_service' %}"></i></td>
             </tr>
           {% endfor %}
           </tbody>

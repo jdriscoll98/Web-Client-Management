@@ -57,10 +57,10 @@ th {
           <td class="label">Email</td>
           <td>{{ object.email }}</td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td class="label">Amount owed</td>
-          <td>${{ object.amount_owed|default_if_none:"0"}}</td>
-        </tr>
+          <td>${{ object.get_amount_owed }}</td>
+        </tr> -->
         <tr>
           <td class="label">Additional Information</td>
           <td>{{ object.additional_information }}</td>
@@ -87,7 +87,7 @@ th {
       <tbody>
         {% for project in projects %}
         <tr id="row-{{ project.pk }}">
-          <td class="project" href="{% url 'management:update_project' pk=project.pk pk2=object.pk %}">{{ project.name }}</td>
+          <td class="project" href="{% url 'management:update_project' pk=project.pk pk2=object.pk %}"><strong>{{ project.name }}</strong></td>
           <td><i class="fab fa-google" href="{{ project.folder_link}}"></i></td>
           <td><i class="fab fa-github" href="{{ project.github_link }}"></i></td>
           <td><i id="{{ project.pk }}" class="fas fa-trash-alt" href="{% url 'management:delete_project' project.pk %}"></i></td>
@@ -105,21 +105,26 @@ th {
     <thead>
       <tr>
         <th colspan="5" class="heading">
-          <h2>Recent Payments
+          <h2>Costs
           </h2>
         </th>
       </tr>
     </thead>
     <tbody>
-      {% for payment in recent_payments %}
       <tr>
-        <td>{{ payment.name }}</td>
-        <td>{{ payment.amount }}/td>
-        <td>{{ payment.date }}</td>
+      <th>Type</th>
+      <th>Amount due</th>
+      <th>Next Due Date</th>
+      </tr>
+      {% for cost in client_costs %}
+      <tr>
+        <td><strong>{{ cost.get_type_display }}</strong></td>
+        <td>${{ cost.client_payment }}</td>
+        <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
       </tr>
       {% empty %}
       <tr>
-        <td style="text-align: center"><h3>No Recent Payments</h3></td>
+        <td colspan="3" style="text-align: center"><h3>No Costs Yet!</h3></td>
       </tr>
       {% endfor %}
     </tbody>

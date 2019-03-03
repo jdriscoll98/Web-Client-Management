@@ -47,7 +47,21 @@ class ListCost(LoginRequiredMixin, ListView):
 
 class AddService(LoginRequiredMixin, CreateView):
     model = Service
-    fields = '_all__'
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Service'
+        return context
+
+class UpdateService(LoginRequiredMixin, CreateView):
+    model = Service
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Modify Service'
+        return context
 
 class ListServices(LoginRequiredMixin, ListView):
     model = Cost
