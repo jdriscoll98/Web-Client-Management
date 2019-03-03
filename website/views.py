@@ -24,14 +24,14 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         elementor = Cost.TYPES.get_value('elementor')
         domains = Cost.TYPES.get_value('domains')
         servers = Cost.TYPES.get_value('server_hosting')
-        other = Cost.TYPES.get_value('other')
+        project = Cost.TYPES.get_value('project')
 
         context = {
             'clients': Client.objects.all(),
             'elementor': get_profit(elementor),
             'domains': get_profit(domains),
             'servers': get_profit(servers),
-            'other': get_profit(other),
+            'project': get_profit(project),
             'total': get_total()
                }
         return context

@@ -58,8 +58,8 @@ th {
         <tbody>
           <tr>
             <th>Client Name</th>
-            {% if title == 'Other' %}
-            <th>Label</th>
+            {% if title == 'Project' %}
+            <th>Project</th>
             {% endif %}
             <th>Next Payment due</th>
             <th>Price</th>
@@ -68,8 +68,8 @@ th {
           {% for cost in object_list|dictsort:"client.name" %}
             <tr>
               <td><strong class="client" href="{% url 'management:detail_client' cost.client.pk %}"> {{ cost.client }}</strong></td>
-              {% if title == 'Other' %}
-              <td>{{ cost.other }}</td>
+              {% if title == 'Project' %}
+              <td>{{ cost.project }}</td>
               {% endif %}
               <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
               <td>${{ cost.price }}</td>

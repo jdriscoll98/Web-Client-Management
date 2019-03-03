@@ -22,7 +22,7 @@ class Cost(models.Model):
         elementor =  ('el', 'Elementor')
         server_hosting =  ('sh', 'Server Hosting')
         domains = ('do', 'Domains')
-        other = ('ot', 'Other')
+        project = ('pj', 'Project')
         @classmethod
         def get_value(cls, member):
             return cls[member].value[0]
@@ -50,7 +50,7 @@ class Cost(models.Model):
 
     client = models.ForeignKey('management.Client', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=[x.value for x in TYPES])
-    other = models.CharField(max_length=100, blank=True, null=True)
+    project = models.ForeignKey('management.Project', blank=True, null=True, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
     client_payment = models.IntegerField()
     last_payment_date = models.DateTimeField()

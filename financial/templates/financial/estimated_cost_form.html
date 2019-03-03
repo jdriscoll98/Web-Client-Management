@@ -74,7 +74,7 @@ th {
                     </select>
                     </td>
                     </tr>
-            <tr><th>Total</th><td><text style="text-align: right; float: right;" class="total"></text></td></tr>
+            <tr><th>Total</th><td><strong style="text-align: right; float: right;" class="total"></strong></td></tr>
       </tbody>
     </table>
     <button id="save" type="submit" value="save" class="btn btn-success">Add Cost</button>
@@ -151,7 +151,7 @@ th {
 
     var x = 1;
     $(add_button).click(function(e) {
-        e.preventDefault();
+      e.preventDefault()
         if (x < max_fields) {
             x++;
             $(wrapper).append('<tr><td><input type="text" name="label"/></td><td><input class="value" type="text" name="1.00"/></td><td><a href="#" class="fas fa-trash-alt delete"></a></td></tr>'); //add input box
