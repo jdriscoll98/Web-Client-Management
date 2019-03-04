@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Cost, Service, Payment
+from .models import ClientCost, CompanyCost, Service
 # Register your models here.
-admin.site.register(Cost)
+admin.site.register(ClientCost)
+admin.site.register(CompanyCost)
 admin.site.register(Service)
-admin.site.register(Payment)

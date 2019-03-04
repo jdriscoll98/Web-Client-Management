@@ -19,6 +19,9 @@ class Service(models.Model):
 class Cost(models.Model):
     #choices style from Two scoops of Django 1.11 best practice
     #lets you loop through choices easily
+    class Meta:
+        abstract = True
+
     class TYPES(Enum):
         elementor =  ('el', 'Elementor')
         server_hosting =  ('sh', 'Server Hosting')
@@ -51,24 +54,10 @@ class Cost(models.Model):
     )
 
 
-    client = models.ForeignKey('management.Client', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=[x.value for x in TYPES])
-    project = models.ForeignKey('management.Project', blank=True, null=True, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField()
-    client_payment = models.IntegerField(default=0)
+    amount = models.IntegerField(default=0)
     last_payment_date = models.DateTimeField(auto_now=True)
     payment_period = models.CharField(max_length=2, choices=PAYMENT_PEROID, default=BIWEEKLY)
-
-
-    def __str__(self):
-        return str(self.client) + ' | ' + self.type
-
-    def get_absolute_url(self):
-        #returns to the clients page after adding/updating a cost
-        return reverse()
-
-    def get_profit(self):
-        return  int(self.client_payment) - int(self.price)
 
     def get_next_payment(self):
         if self.payment_period == self.BIWEEKLY:
@@ -79,7 +68,15 @@ class Cost(models.Model):
             next_payment = self.last_payment_date + timedelta(weeks=52)
         return next_payment
 
-class Payment(models.Model):
-    cost = models.ForeignKey(Cost, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
-    date_paid = models.DateTimeField(auto_now=True)
+class ClientCost(Cost):
+    client = models.ForeignKey('management.Client', on_delete=models.CASCADE)
+    project = models.ForeignKey('management.Project', blank=True, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.client) + ' | ' + self.type
+
+class CompanyCost(Cost):
+    company = models.ForeignKey('management.Company', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.company) + ' | ' + self.type

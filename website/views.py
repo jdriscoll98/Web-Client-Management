@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from .utils import get_profit, get_total
-from management.models import Client
+from management.models import Company
 from financial.models import Cost
 
 #-------------------------------------------------------------------------------
@@ -21,17 +21,9 @@ class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'website/homepage.html'
 
     def get_context_data(self, *args, **kwargs):
-        elementor = Cost.TYPES.get_value('elementor')
-        domains = Cost.TYPES.get_value('domains')
-        servers = Cost.TYPES.get_value('server_hosting')
-        project = Cost.TYPES.get_value('project')
-
+        user = User.objects.get(pk=self.request.user.pk)
+        companies = Company.objects.filter(members__in=[self.request.user])
         context = {
-            'clients': Client.objects.all(),
-            'elementor': get_profit(elementor),
-            'domains': get_profit(domains),
-            'servers': get_profit(servers),
-            'project': get_profit(project),
-            'total': get_total()
+            'companies': companies
                }
         return context

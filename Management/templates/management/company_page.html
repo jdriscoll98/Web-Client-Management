@@ -36,6 +36,16 @@ th {
 .heading {
   text-align: center;
 }
+.title {
+  background-color: var(--secondary-color) !important;
+  color: white;
+  text-align: center;
+
+  border-radius: 10px;
+  padding: 10px;
+  padding-bottom: 15px;
+
+}
 
   </style>
 {% endblock custom_css %}
@@ -44,25 +54,87 @@ th {
 {% include 'website/server_messages.html' %}
 <div class="container">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col">
+      <h2 class="title">{{ company }} Homepage</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+
       <table class="table">
         <thead>
-            <tr><th class="text-center"><h2>Costs
-              <i class='fa fa-plus' href="{% url 'financial:add_company_cost' client.pk %}"></i>
+          <tr>
+            <th colspan="2" class="heading">
+              <h2>
+          Clients
+          <i class="fas fa-plus" href="{% url 'management:add_client' company.pk %}"></i><br/>
+          </h2>
+          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for clients.." title="Type in a client">
+          </th>
+          </tr>
+          </thead>
+          <tbody id="client-table">
+        {% for client in clients %}
+        <tr id="row-{{ client.pk }}" ><td class="client" href="{% url 'management:detail_client' client.pk %}"><h5>{{ client.name }}</h5></td>
+        <td><i id="{{ client.pk }}" style="color:red" class="fas fa-trash-alt" href="{% url 'management:delete_client' client.pk %}"></i></tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+      <div class="col">
+      <table class="table">
+        <thead>
+            <tr><th colspan="3" class="text-center"><h2>Income Summary
+              <i class='fa fa-plus' href="{% url 'financial:add_company_cost' company.pk %}"></i>
               </h2>
               </th>
             </tr>
         </thead>
         <tbody>
-          {% for cost in costs %}
-            <tr>
-              <td>{{ cost.type }}</td>
-              <td>{{ cost.price }}</td>
-              <td>{{ cost.get_next_payment }}</td>
-            </tr>
-          {% endfor %}
+          <tr><th class="cost" href="{% url 'financial:list' 'elementor' %}">Elementor:</th>
+            {% if elementor %}
+            <td class="value">${{ elementor.price }}</td>
+            <td class="value">{{ elementor.get_next_payment|date:"M d, Y" }}</td>
+            {% else %}
+            <td>$0</td>
+            <td>N/A</td>
+            {% endif %}
+          <tr><th class="cost" href="{% url 'financial:list' 'domains' %}">Domains:</th>
+            {% if domains %}
+            <td class="value">${{ domains.price}}</td>
+            <td class="value">${{ domains.next_payment }}</td>
+            {% else %}
+            <td>$0</td>
+            <td>N/A</td>
+            {% endif %}
+          <tr><th class="cost" href="{% url 'financial:list' 'server_hosting' %}">Servers:</th>
+            {% if servers %}
+            <td class="value">${{ servers.price }}</td>
+            <td class="value">${{ servers.get_next_payment }}</td>
+            {% else %}
+            <td>$0</td>
+            <td>N/A</td>
+            {% endif %}
+          <tr><th class="cost" href="{% url 'financial:list' 'project' %}">Projects:</th>
+            {% if project %}
+            <td class="value" >${{ project.price }}</td>
+            <td class="value" >${{ project.get_next_payment }}</td>
+            {% else %}
+            <td>$0</td>
+            <td>N/A</td>
+            {% endif %}
+            <tr style="border-top: 1px solid black;">
+              <th>
+                Total:
+              </th>
+              <td colspan="2" class="value">${{ total }}
+                </td>
+                </tr>
           </tbody>
       </table>
+      </div>
+    </div>
+    <div class="row">
     <div class="col">
       <table id="cost-table" class="table">
         <thead>
@@ -81,7 +153,7 @@ th {
             <th>Hourly Rate</th>
             <th>Edit</th>
           </tr>
-          {% for service in object_list %}
+          {% for service in services %}
             <tr>
               <td>{{ service.name }}</td>
               <td>{{ service.cost_per_hour }}</td>
@@ -100,6 +172,22 @@ th {
 //------------------------------------------------------
 $('.fa-plus').click(function() {
   window.location.href = $(this).attr("href");
-})
+});
+
+
+$('.fa-trash-alt').click(function() {
+  var id = $(this).attr('id');
+  if(confirm("Are you sure you want to delete this client?")) {
+    $.get($(this).attr('href'), {}, function(data) {
+      if(data.deleted) {
+        $('#client-table #row-' + id).remove();
+      }
+      else {
+        console.log("Could not delete client at this time!");
+      }
+    });
+  }
+});
+
 </script>
 {% endblock js %}

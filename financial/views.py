@@ -7,9 +7,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
-from django.conf import settings
 
-from .models import Cost, Service, Payment
+from .models import ClientCost, CompanyCost, Service
 from .utils import create_costs, send_invoice, get_invoices
 from .forms import InvoiceForm
 from management.models import Client, Project
@@ -35,24 +34,24 @@ class AddCompanycost(AddCost):
     form_class = CompanyCost
 
 class UpdateCost(LoginRequiredMixin, UpdateView):
-    model = Cost
+    model = ClientCost
     fields = '__all__'
 
 class DeleteCost(LoginRequiredMixin, DeleteViewAjax):
-    model = Cost
+    model = ClientCost
 
 class ListCost(LoginRequiredMixin, ListView):
-    model = Cost
+    model = ClientCost
     paginate_by = 100
 
     def get_queryset(self, **kwargs):
-        type = Cost.TYPES.get_value(self.kwargs.get('type'))
-        queryset = Cost.objects.filter(type=type)
+        type = ClientCost.TYPES.get_value(self.kwargs.get('type'))
+        queryset = ClientCost.objects.filter(type=type)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = Cost.TYPES.get_label(self.kwargs.get('type'))
+        context['title'] = ClientCost.TYPES.get_label(self.kwargs.get('type'))
         return context
 
 #service views
@@ -81,7 +80,7 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
             'services' : Service.objects.all(),
             'clients' : Client.objects.all(),
             'projects': Project.objects.all(),
-            'types': [x.value for x in Cost.TYPES if x.value[0] != 'pj' ]
+            'types': [x.value for x in ClientCost.TYPES if x.value[0] != 'pj' ]
         }
         return render(self.request, 'financial/estimated_cost_form.html', context)
 

@@ -4,22 +4,32 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from django.conf import settings
-from .models import Client, Project
-from financial.models import Cost
+from .models import Client, Project, Company
+from financial.models import ClientCost, CompanyCost, Service
 from .mixins import DeleteViewAjax
-from .forms import ProjectForm
+from .forms import ProjectForm, ClientForm
+from .utils import get_income_cost, get_total
 
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
-    model = Client
-    fields = '__all__'
-    success_url = reverse_lazy('website:homepage_view')
+    form_class = ClientForm
+    template_name = 'management/client_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Add Client'
+        context['next'] = reverse('management:company_page', kwargs={'pk': self.kwargs.get('pk')})
         return context
+
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(*args, **kwargs)
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        initial['company'] = company
+        return initial
+
+    def get_success_url(self, **kwargs):
+        next = self.request.POST.get('next', None)
+        return next
 
 class DeleteClient(LoginRequiredMixin, DeleteViewAjax):
     model = Client
@@ -39,7 +49,7 @@ class DetailClient(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['projects'] = Project.objects.filter(client=self.object)
-        context['client_costs'] = Cost.objects.filter(client=self.object)
+        context['client_costs'] = ClientCost.objects.filter(client=self.object)
         return context
 
 # project views
@@ -91,10 +101,44 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
     template_name = 'management/company_page.html'
 
     def get_context_data(self, *args, **kwargs):
-        client = Client.objects.get(name=settings.COMPANY_NAME)
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        elementor = CompanyCost.TYPES.get_value('elementor')
+        domains = CompanyCost.TYPES.get_value('domains')
+        servers = CompanyCost.TYPES.get_value('server_hosting')
+        project = CompanyCost.TYPES.get_value('project')
         context = {
-            'client': client,
-            'costs': Cost.objects.filter(client=client)
+            'company': company,
+            'clients': Client.objects.filter(company=company),
+            'costs': CompanyCost.objects.filter(company=company),
+            'elementor': get_income_cost(company, elementor),
+            'domains': get_income_cost(company, domains),
+            'servers': get_income_cost(company, servers),
+            'project': get_income_cost(company, project),
+            'total': get_total(company),
+            'services': Service.objects.all()
 
         }
+        return context
+
+
+class AddCompany(LoginRequiredMixin, CreateView):
+    model = Company
+    fields = '__all__'
+    success_url = reverse_lazy('website:homepage_view')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Company'
+        return context
+
+class DeleteCompany(LoginRequiredMixin, DeleteViewAjax):
+    model = Company
+
+class UpdateCompany(LoginRequiredMixin, UpdateView):
+    model = Company
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Client'
         return context
