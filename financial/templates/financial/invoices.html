@@ -1,0 +1,88 @@
+{% extends 'website/base.html' %}
+
+{% block custom_css %}
+<style>
+  .fa-plus {
+    color: var(--primary-color) !important;
+  }
+
+#myInput {
+  width: 50%;
+  border-radius: 10px;
+  border-color: var(--secondary-color) !important;
+  outline: none;
+}
+.btn {
+  width: 100%;
+  background-color: var(--primary-color) !important;
+}
+.fa-edit {
+    color: var(--primary-color) !important;
+}
+.fa-plus {
+  color: var(--primary-color) !important;
+}
+thead {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+th {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.label {
+  font-weight: bold;
+}
+.heading {
+  text-align: center;
+}
+
+  </style>
+{% endblock custom_css %}
+
+{% block content %}
+{% include 'website/server_messages.html' %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table id="cost-table" class="table">
+        <thead>
+          <tr>
+            <th colspan="4" class="heading">
+              <h2 id="type">
+                Open Invoices
+                <i class='fa fa-plus' href="{% url 'financial:create_invoice' %}"></i>
+              </h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Client</th>
+            <th>Charge</th>
+            <th>Due Date</th>
+          </tr>
+            <tr>
+              <td>SGS</td>
+              <td>$1000</td>
+              <td>6/1/2019</td>
+              <td><i class="fas fa-edit" href="{% url 'financial:update_invoice' %}"></i></td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+//------------------------------------------------------
+$('.fa-plus').click(function() {
+  window.location.href = $(this).attr("href");
+})
+$('.fa-edit').click(function() {
+  window.location.href = $(this).attr("href");
+})
+</script>
+{% endblock js %}

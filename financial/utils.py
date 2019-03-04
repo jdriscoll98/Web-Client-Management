@@ -1,5 +1,7 @@
 from .models import Service, Cost
 from management.models import Client, Project
+from django.conf import settings
+import stripe
 
 def create_costs(data):
     try:
@@ -66,6 +68,38 @@ def create_costs(data):
         if not created:
             cost.client_payment += int(data['Elementor'])
             cost.save()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def create_customer(client):
+    try:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        customer = stripe.Customer.create(
+            description = "customer for %s" % (str(client)),
+            email = client.email
+        )
+        return customer, True
+    except Exception as e:
+        print(e)
+        return "", False
+
+def send_invoice(customer_id, amount, description, due_date):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    try:
+        stripe.InvoiceItem.create(
+            customer=customer_id,
+            amount=amount * 100,
+            currency="usd",
+            description=description,
+        )
+        invoice = stripe.Invoice.create(
+            customer=customer_id,
+            billing='send_invoice',
+            due_date = due_date,
+        )
+        invoice.send_invoice()
         return True
     except Exception as e:
         print(e)

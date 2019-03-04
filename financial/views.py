@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -8,11 +9,12 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
-from .utils import create_costs
-
-from .forms import EstimatedCostForm
+from .utils import create_costs, create_customer, send_invoice
+from .forms import InvoiceForm
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
+from datetime import datetime
+import stripe
 # Create your views here.
 class AddCost(LoginRequiredMixin, CreateView):
     model = Cost
@@ -85,3 +87,32 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
         if create_costs(data):
             return redirect(reverse('website:homepage_view'))
         return redirect(reverse('financial:estimate'))
+
+class ManageInvoices(LoginRequiredMixin, TemplateView):
+    template_name = 'financial/invoices.html'
+
+class AddInvoice(LoginRequiredMixin, FormView):
+    form_class = InvoiceForm
+    template_name = 'financial/invoice_form.html'
+    success_url = reverse_lazy('financial:invoice')
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        client = data['client']
+        amount = data['amount']
+        description = data['description']
+        due_date =  int(data['due_date'].timestamp())
+        if client.customer_id:
+            customer_id = client.get_customer_id()
+            send_invoice(customer_id, amount, description, due_date)
+        else:
+            customer, success = create_customer(client)
+            if success:
+                client.customer_id = customer['id']
+                client.save()
+                send_invoice(client.customer_id, amount, description, due_date)
+        return HttpResponseRedirect(self.get_success_url())
+
+class UpdateInvoice(LoginRequiredMixin, View):
+    def post(self, *args, **kwargs):
+        return redirect('website:homepage_view')

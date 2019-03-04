@@ -3,6 +3,7 @@ from django.urls import reverse
 from enum import Enum
 from datetime import timedelta
 from .managers import TypeManager
+import stripe
 # Create your models here.
 
 class Service(models.Model):
