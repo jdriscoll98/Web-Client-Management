@@ -36,6 +36,11 @@ th {
 .heading {
   text-align: center;
 }
+.divider {
+  text-align: center;
+  background-color: var(--primary-color) !important;
+  color: white;
+}
 
   </style>
 {% endblock custom_css %}
@@ -56,22 +61,41 @@ th {
           </tr>
         </thead>
         <tbody>
+          <tr><td class="divider" colspan="4">Company Costs</td></tr>
+          <tr><th>Company Name</th>
+            {% if title == 'Project' %}
+            <th>Project</th>
+            {% endif %}
+            <th>Next Payment due</th>
+            <th>Amount</th>
+          </tr>
+          {% for cost in company_costs %}
+            <tr>
+              <td><strong class="company" href="{% url 'management:company_page' company.pk %}"> {{ cost.company }}</strong></td>
+              {% if title == 'Project' %}
+              <td>{{ cost.project }}</td>
+              {% endif %}
+              <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
+              <td>${{ cost.amount }}</td>
+            </tr>
+          {% endfor %}
+          <tr><td class="divider" colspan="4">Client Fees</td></tr>
           <tr>
             <th>Client Name</th>
             {% if title == 'Project' %}
             <th>Project</th>
             {% endif %}
             <th>Next Payment due</th>
-            <th>Client Payment</th>
+            <th>Fee</th>
           </tr>
-          {% for cost in object_list|dictsort:"client.name" %}
+          {% for cost in client_costs %}
             <tr>
               <td><strong class="client" href="{% url 'management:detail_client' cost.client.pk %}"> {{ cost.client }}</strong></td>
               {% if title == 'Project' %}
               <td>{{ cost.project }}</td>
               {% endif %}
               <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
-              <td>${{ cost.client_payment}}</td>
+              <td>${{ cost.amount }}</td>
             </tr>
           {% endfor %}
             <tr>{{ profits }}</tr>

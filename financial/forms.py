@@ -8,7 +8,7 @@ class InvoiceForm(forms.Form):
     due_date = forms.DateTimeField()
     description = forms.CharField()
 
-class CompanyCost(forms.ModelForm):
+class CompanyCostForm(forms.ModelForm):
     class Meta:
         model = Cost
         exclude = ['project', 'client_payment']
@@ -16,7 +16,7 @@ class CompanyCost(forms.ModelForm):
             'client': forms.HiddenInput()
         }
 
-class ClientCost(forms.ModelForm):
+class ClientCostForm(forms.ModelForm):
     class Meta:
         model = Cost
         fields = ('__all__')

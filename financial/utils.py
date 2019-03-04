@@ -1,4 +1,4 @@
-from .models import Service, ClientCost
+from .models import Service, ClientCost, Cost
 from management.models import Client, Project
 from django.conf import settings
 import stripe
@@ -17,7 +17,7 @@ def create_costs(data):
                 project_cost += (int(data[str(service)]) * service.cost_per_hour)
         project_cost += int(data['Plugin'])
         project_cost += int(data['Theme'])
-        type = ClientCost.TYPES.get_value('project')
+        type = Cost.TYPES.get_value('project')
         cost, created = ClientCost.objects.get_or_create(
             client=client,
             project=project,
@@ -30,9 +30,9 @@ def create_costs(data):
             cost.amount += project_cost
             cost.save()
         send_invoice(client, int(project_cost), str(project), due_date)
-        server_hosting = ClientCost.TYPES.get_value('server_hosting')
-        domains = ClientCost.TYPES.get_value('domains')
-        elementor = ClientCost.TYPES.get_value('elementor')
+        server_hosting = Cost.TYPES.get_value('server_hosting')
+        domains = Cost.TYPES.get_value('domains')
+        elementor = Cost.TYPES.get_value('elementor')
         cost, created = ClientCost.objects.get_or_create(
             client=client,
             type=server_hosting,
@@ -110,3 +110,10 @@ def get_invoices():
     invoice_list = []
     invoices = stripe.Invoice.list(limit=100)['data']
     return invoices
+
+def get_client_costs(company, type):
+    costs = []
+    for client in Client.objects.filter(company=company):
+        for cost in ClientCost.objects.filter(client=client, type=type):
+            costs.append(cost)
+    return costs

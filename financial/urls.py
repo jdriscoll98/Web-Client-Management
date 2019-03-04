@@ -12,7 +12,7 @@ urlpatterns = [
 		url(r'^add-company-cost/(?P<pk>\d+)/$', AddCompanycost.as_view(), name='add_company_cost'),
 		url(r'^remove-cost/(?P<pk>\d+)/$', DeleteCost.as_view(), name='delete'),
 		url(r'^update-cost/(?P<pk>\d+)/$', UpdateCost.as_view(), name='update'),
-		url(r'^list-cost/(?P<type>\w+)/$', ListCost.as_view(), name='list'),
+		url(r'^cost/(?P<pk>\d+)/(?P<type>\w+)/$', CostView.as_view(), name='cost'),
 		url(r'^estimate-cost/$', EstimatedCostGenerator.as_view(), name='estimate'),
 		#services
 		url(r'^add-service/(?P<pk>\d+)/$', AddService.as_view(), name='add_service'),

@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from enum import Enum
 from datetime import timedelta
-from .managers import TypeManager
 import stripe
 # Create your models here.
 
@@ -35,8 +34,6 @@ class Cost(models.Model):
             return cls[member].value[1]
 
     #using model managers to index data
-    objects = models.Manager()
-    TypeManager = TypeManager()
 
 
     #another way to do choices

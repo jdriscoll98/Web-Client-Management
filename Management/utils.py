@@ -13,7 +13,7 @@ def get_total(company):
         for client in Client.objects.filter(company=company):
             for cost in ClientCost.objects.filter(client=client):
                 income += cost.amount
-        return (income)
+        return income
     except Exception as e:
         print(e)
         return 0
@@ -21,11 +21,14 @@ def get_total(company):
 def get_income_cost(company, type):
     try:
         income = 0
+        expense = 0
         for client in Client.objects.filter(company=company):
             for cost in ClientCost.objects.filter(client=client, type=type):
                 income += cost.amount
-        expense = CompanyCost.objects.get(company=company, type=type)
-        return (income - expense.amount)
+        expenses = CompanyCost.objects.filter(company=company, type=type)
+        for cost in expenses:
+            expense += cost.amount
+        return (income - expense)
     except Exception as e:
         print(e)
         return 0

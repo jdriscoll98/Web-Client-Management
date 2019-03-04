@@ -91,37 +91,29 @@ th {
             </tr>
         </thead>
         <tbody>
-          <tr><th class="cost" href="{% url 'financial:list' 'elementor' %}">Elementor:</th>
+          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'elementor' %}">Elementor:</th>
             {% if elementor %}
-            <td class="value">${{ elementor.price }}</td>
-            <td class="value">{{ elementor.get_next_payment|date:"M d, Y" }}</td>
+            <td class="value">${{ elementor }}</td>
             {% else %}
             <td>$0</td>
-            <td>N/A</td>
             {% endif %}
-          <tr><th class="cost" href="{% url 'financial:list' 'domains' %}">Domains:</th>
+          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'domains' %}">Domains:</th>
             {% if domains %}
-            <td class="value">${{ domains.price}}</td>
-            <td class="value">${{ domains.next_payment }}</td>
+            <td class="value">${{ domains}}</td>
             {% else %}
             <td>$0</td>
-            <td>N/A</td>
             {% endif %}
-          <tr><th class="cost" href="{% url 'financial:list' 'server_hosting' %}">Servers:</th>
+          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'server_hosting' %}">Servers:</th>
             {% if servers %}
-            <td class="value">${{ servers.price }}</td>
-            <td class="value">${{ servers.get_next_payment }}</td>
+            <td class="value">${{ servers }}</td>
             {% else %}
             <td>$0</td>
-            <td>N/A</td>
             {% endif %}
-          <tr><th class="cost" href="{% url 'financial:list' 'project' %}">Projects:</th>
+          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'project' %}">Projects:</th>
             {% if project %}
-            <td class="value" >${{ project.price }}</td>
-            <td class="value" >${{ project.get_next_payment }}</td>
+            <td class="value" >${{ project }}</td>
             {% else %}
             <td>$0</td>
-            <td>N/A</td>
             {% endif %}
             <tr style="border-top: 1px solid black;">
               <th>
@@ -174,6 +166,17 @@ $('.fa-plus').click(function() {
   window.location.href = $(this).attr("href");
 });
 
+$(document).ready(function() {
+  $('.value').each(function(){
+    if(parseInt($(this).html().substring(1)) >= 0 ) {
+        $(this).css("color","green");
+    }
+    else {
+      $(this).css("color","red");
+    }
+  });
+});
+
 
 $('.fa-trash-alt').click(function() {
   var id = $(this).attr('id');
@@ -193,6 +196,9 @@ $('.client').click(function() {
   window.location.href = $(this).attr('href');
 });
 
+$('.cost').click(function() {
+  window.location.href = $(this).attr('href')
+})
 
 </script>
 {% endblock js %}

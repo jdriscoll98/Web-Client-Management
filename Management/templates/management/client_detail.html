@@ -119,7 +119,7 @@ th {
       {% for cost in client_costs %}
       <tr>
         <td><strong>{{ cost.get_type_display }}</strong></td>
-        <td>${{ cost.client_payment }}</td>
+        <td>${{ cost.amount }}</td>
         <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
       </tr>
       {% empty %}
