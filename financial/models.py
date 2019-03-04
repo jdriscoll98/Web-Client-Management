@@ -55,13 +55,13 @@ class Cost(models.Model):
     type = models.CharField(max_length=2, choices=[x.value for x in TYPES])
     project = models.ForeignKey('management.Project', blank=True, null=True, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
-    client_payment = models.IntegerField()
+    client_payment = models.IntegerField(default=0)
     last_payment_date = models.DateTimeField(auto_now=True)
     payment_period = models.CharField(max_length=2, choices=PAYMENT_PEROID, default=BIWEEKLY)
 
 
     def __str__(self):
-        return str(self.client) + ' | ' + str(self.type)
+        return str(self.client) + ' | ' + self.type
 
     def get_absolute_url(self):
         #returns to the clients page after adding/updating a cost

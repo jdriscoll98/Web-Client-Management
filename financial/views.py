@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
+from django.conf import settings
 
 from .models import Cost, Service, Payment
 from .utils import create_costs, send_invoice, get_invoices
@@ -16,18 +17,22 @@ from .mixins import DeleteViewAjax
 from datetime import datetime
 import stripe
 import json
-# Create your views here.
+from .forms import CompanyCost, ClientCost
+#cost views
 class AddCost(LoginRequiredMixin, CreateView):
-    model = Cost
-    fields = '__all__'
+    form_class = ClientCost
+    template_name = 'financial/cost_form.html'
     success_url = reverse_lazy('website:homepage_view')
 
     def get_initial(self):
         initial = super(AddCost, self).get_initial()
         initial = initial.copy()
-        initial['client'] = self.kwargs.get('pk')
+        client = self.kwargs.get('pk')
+        initial['client'] = client
         return initial
 
+class AddCompanycost(AddCost):
+    form_class = CompanyCost
 
 class UpdateCost(LoginRequiredMixin, UpdateView):
     model = Cost
@@ -50,6 +55,7 @@ class ListCost(LoginRequiredMixin, ListView):
         context['title'] = Cost.TYPES.get_label(self.kwargs.get('type'))
         return context
 
+#service views
 class AddService(LoginRequiredMixin, CreateView):
     model = Service
     fields = '__all__'
@@ -68,11 +74,7 @@ class UpdateService(LoginRequiredMixin, CreateView):
         context['title'] = 'Modify Service'
         return context
 
-class ListServices(LoginRequiredMixin, ListView):
-    model = Cost
-    paginate_by = 100
-    queryset = Service.objects.all()
-
+#cost generator
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {
@@ -89,6 +91,7 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
             return redirect(reverse('website:homepage_view'))
         return redirect(reverse('financial:estimate'))
 
+# invoice views
 class ManageInvoices(LoginRequiredMixin, TemplateView):
     template_name = 'financial/invoices.html'
 

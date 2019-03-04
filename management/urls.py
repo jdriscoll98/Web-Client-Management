@@ -16,4 +16,6 @@ urlpatterns = [
 		url(r'^add-project/(?P<pk>\d+)/$', AddProject.as_view(), name='add_project'),
 		url(r'^delete-project/(?P<pk>\d+)/$', DeleteProject.as_view(), name='delete_project'),
 		url(r'^update-project/(?P<pk>\d+)/(?P<pk2>\d+)$', UpdateProject.as_view(), name='update_project'),
+		# company mangement
+		url(r'^company-page/$', CompanyPage.as_view(), name='company_page'),
 	]

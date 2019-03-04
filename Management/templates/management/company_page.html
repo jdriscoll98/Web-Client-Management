@@ -44,37 +44,51 @@ th {
 {% include 'website/server_messages.html' %}
 <div class="container">
   <div class="row">
+    <div class="col-md-4">
+      <table class="table">
+        <thead>
+            <tr><th class="text-center"><h2>Costs
+              <i class='fa fa-plus' href="{% url 'financial:add_company_cost' client.pk %}"></i>
+              </h2>
+              </th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for cost in costs %}
+            <tr>
+              <td>{{ cost.type }}</td>
+              <td>{{ cost.price }}</td>
+              <td>{{ cost.get_next_payment }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+      </table>
     <div class="col">
       <table id="cost-table" class="table">
         <thead>
           <tr>
-            <th colspan="5" class="heading">
+            <th colspan="4" class="heading">
               <h2 id="type">
-                {{ title }}
+                Services
+                <i class='fa fa-plus' href="{% url 'financial:add_service' %}"></i>
               </h2>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>Client Name</th>
-            {% if title == 'Project' %}
-            <th>Project</th>
-            {% endif %}
-            <th>Next Payment due</th>
-            <th>Client Payment</th>
+            <th>Service</th>
+            <th>Hourly Rate</th>
+            <th>Edit</th>
           </tr>
-          {% for cost in object_list|dictsort:"client.name" %}
+          {% for service in object_list %}
             <tr>
-              <td><strong class="client" href="{% url 'management:detail_client' cost.client.pk %}"> {{ cost.client }}</strong></td>
-              {% if title == 'Project' %}
-              <td>{{ cost.project }}</td>
-              {% endif %}
-              <td>{{ cost.get_next_payment|date:"M d, Y" }}</td>
-              <td>${{ cost.client_payment}}</td>
+              <td>{{ service.name }}</td>
+              <td>{{ service.cost_per_hour }}</td>
+              <td><i class="fas fa-edit" href="{% url 'financial:update_service' %}"></i></td>
             </tr>
           {% endfor %}
-            <tr>{{ profits }}</tr>
+          </tbody>
       </table>
     </div>
   </div>
@@ -84,8 +98,8 @@ th {
 {% block js %}
 <script>
 //------------------------------------------------------
-$('.client').click(function() {
-  window.location.href = $(this).attr('href');
+$('.fa-plus').click(function() {
+  window.location.href = $(this).attr("href");
 })
 </script>
 {% endblock js %}

@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-
+from django.conf import settings
 from .models import Client, Project
 from financial.models import Cost
 from .mixins import DeleteViewAjax
 from .forms import ProjectForm
+
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
     model = Client
@@ -40,8 +41,8 @@ class DetailClient(LoginRequiredMixin, DetailView):
         context['projects'] = Project.objects.filter(client=self.object)
         context['client_costs'] = Cost.objects.filter(client=self.object)
         return context
-    # project
 
+# project views
 class AddProject(LoginRequiredMixin, CreateView):
     template_name = 'management/project_form.html'
     form_class = ProjectForm
@@ -84,3 +85,16 @@ class UpdateProject(LoginRequiredMixin, UpdateView):
     def get_success_url(self, **kwargs):
         next = self.request.POST.get('next', reverse('website:homepage_view'))
         return next
+
+#company Management
+class CompanyPage(LoginRequiredMixin, TemplateView):
+    template_name = 'management/company_page.html'
+
+    def get_context_data(self, *args, **kwargs):
+        client = Client.objects.get(name=settings.COMPANY_NAME)
+        context = {
+            'client': client,
+            'costs': Cost.objects.filter(client=client)
+
+        }
+        return context
