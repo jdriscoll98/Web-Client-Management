@@ -2,6 +2,7 @@ from .models import Service, Cost
 from management.models import Client, Project
 from django.conf import settings
 import stripe
+import json
 
 def create_costs(data):
     try:
@@ -104,3 +105,9 @@ def send_invoice(customer_id, amount, description, due_date):
     except Exception as e:
         print(e)
         return False
+
+def get_invoices():
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    invoice_list = []
+    invoices = stripe.Invoice.list(limit=100)['data']
+    return invoices

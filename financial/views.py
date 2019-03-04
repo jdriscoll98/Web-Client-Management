@@ -9,12 +9,13 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
-from .utils import create_costs, create_customer, send_invoice
+from .utils import create_costs, create_customer, send_invoice, get_invoices
 from .forms import InvoiceForm
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
 from datetime import datetime
 import stripe
+import json
 # Create your views here.
 class AddCost(LoginRequiredMixin, CreateView):
     model = Cost
@@ -90,6 +91,13 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
 
 class ManageInvoices(LoginRequiredMixin, TemplateView):
     template_name = 'financial/invoices.html'
+
+    def get_context_data(self, *args, **kwargs):
+        invoices = get_invoices()
+        context =  {
+            'invoices' : invoices
+        }
+        return context
 
 class AddInvoice(LoginRequiredMixin, FormView):
     form_class = InvoiceForm

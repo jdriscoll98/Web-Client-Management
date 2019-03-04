@@ -42,6 +42,9 @@ th {
 
 {% block content %}
 {% include 'website/server_messages.html' %}
+{% load app_filters %}
+
+</template>%}
 <div class="container">
   <div class="row">
     <div class="col">
@@ -62,12 +65,14 @@ th {
             <th>Charge</th>
             <th>Due Date</th>
           </tr>
-            <tr>
-              <td>SGS</td>
-              <td>$1000</td>
-              <td>6/1/2019</td>
-              <td><i class="fas fa-edit" href="{% url 'financial:update_invoice' %}"></i></td>
-            </tr>
+              {% for invoice in invoices %}
+              <tr>
+                <td>{{ invoice.customer }}</td>
+                <td>{{ invoice.amount_remaining }}</td>
+                <td>{{ invoice.due_date }}</td>
+                <td><i class="fas fa-edit" href="{% url 'financial:update_invoice' %}"></i></td>
+              </tr>
+              {% endfor %}
           </tbody>
       </table>
     </div>
