@@ -50,4 +50,4 @@ class Project(models.Model):
     folder_link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)

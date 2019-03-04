@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import Cost, Service, Payment
-from .utils import create_costs, create_customer, send_invoice, get_invoices
+from .utils import create_costs, send_invoice, get_invoices
 from .forms import InvoiceForm
 from management.models import Client, Project
 from .mixins import DeleteViewAjax
@@ -110,15 +110,7 @@ class AddInvoice(LoginRequiredMixin, FormView):
         amount = data['amount']
         description = data['description']
         due_date =  int(data['due_date'].timestamp())
-        if client.customer_id:
-            customer_id = client.get_customer_id()
-            send_invoice(customer_id, amount, description, due_date)
-        else:
-            customer, success = create_customer(client)
-            if success:
-                client.customer_id = customer['id']
-                client.save()
-                send_invoice(client.customer_id, amount, description, due_date)
+        send_invoice(client, amount, description, due_date)
         return HttpResponseRedirect(self.get_success_url())
 
 class UpdateInvoice(LoginRequiredMixin, View):
