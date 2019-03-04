@@ -62,7 +62,15 @@ class AddService(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Add Service'
+        context['next'] = reverse('management:company_page',kwargs={'pk': self.kwargs.get('pk')})
         return context
+
+    def get_success_url(self, **kwargs):
+        print('here')
+        next = self.request.POST.get('next', None)
+        print('now here')
+        return next
+
 
 class UpdateService(LoginRequiredMixin, CreateView):
     model = Service

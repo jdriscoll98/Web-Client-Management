@@ -15,7 +15,7 @@ urlpatterns = [
 		url(r'^list-cost/(?P<type>\w+)/$', ListCost.as_view(), name='list'),
 		url(r'^estimate-cost/$', EstimatedCostGenerator.as_view(), name='estimate'),
 		#services
-		url(r'^add-service/$', AddService.as_view(), name='add_service'),
+		url(r'^add-service/(?P<pk>\d+)/$', AddService.as_view(), name='add_service'),
 		url(r'^update-service/$', UpdateService.as_view(), name='update_service'),
 		#invoices
 		url(r'^invoices/$', ManageInvoices.as_view(), name='invoice'),

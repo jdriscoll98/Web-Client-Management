@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import timedelta
-from financial.models import Cost
+from financial.models import ClientCost, CompanyCost
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 # Create your models here.
@@ -48,7 +48,7 @@ class Client(models.Model):
         return cost.get_total_cost()
 
     def get_amount_owed(self):
-        total = sum(cost.client_payment for cost in Cost.objects.filter(client=self))
+        total = sum(cost.amount for cost in ClientCost.objects.filter(client=self))
         return total
 
     def get_customer_id(self):

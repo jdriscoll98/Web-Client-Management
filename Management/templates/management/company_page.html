@@ -142,7 +142,7 @@ th {
             <th colspan="4" class="heading">
               <h2 id="type">
                 Services
-                <i class='fa fa-plus' href="{% url 'financial:add_service' %}"></i>
+                <i class='fa fa-plus' href="{% url 'financial:add_service' pk=company.pk %}"></i>
               </h2>
             </th>
           </tr>
@@ -188,6 +188,11 @@ $('.fa-trash-alt').click(function() {
     });
   }
 });
+
+$('.client').click(function() {
+  window.location.href = $(this).attr('href');
+});
+
 
 </script>
 {% endblock js %}

@@ -1,4 +1,5 @@
 from financial.models import CompanyCost, ClientCost
+from management.models import Client
 
 def get_company_cost(company, type):
     try:
