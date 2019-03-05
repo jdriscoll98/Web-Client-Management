@@ -49,6 +49,9 @@ th {
 .nav {
   display: inline;
 }
+.value {
+  /* float: right; */
+}
   </style>
 {% endblock custom_css %}
 
@@ -101,31 +104,36 @@ th {
               </h2>
               </th>
             </tr>
+            <tr>
+              <td><strong>Filter by:</strong></td>
+              <td id="monthly">Monthly</td>
+              <td id="yearly">Yearly</td>
+            </tr>
         </thead>
         <tbody>
           <tr><th class="cost" href="{% url 'financial:cost' company.pk 'elementor' %}">Elementor:</th>
             {% if elementor %}
-            <td class="value">${{ elementor }}</td>
+            <td colspan="2" class="value">${{ elementor }}</td>
             {% else %}
-            <td>$0</td>
+            <td class="value">$0</td>
             {% endif %}
           <tr><th class="cost" href="{% url 'financial:cost' company.pk 'domains' %}">Domains:</th>
             {% if domains %}
             <td class="value">${{ domains}}</td>
             {% else %}
-            <td>$0</td>
+            <td class="value">$0</td>
             {% endif %}
           <tr><th class="cost" href="{% url 'financial:cost' company.pk 'server_hosting' %}">Servers:</th>
             {% if servers %}
             <td class="value">${{ servers }}</td>
             {% else %}
-            <td>$0</td>
+            <td class="value">$0</td>
             {% endif %}
           <tr><th class="cost" href="{% url 'financial:cost' company.pk 'project' %}">Projects:</th>
             {% if project %}
             <td class="value" >${{ project }}</td>
             {% else %}
-            <td>$0</td>
+          <td class="value">$0</td>
             {% endif %}
             <tr style="border-top: 1px solid black;">
               <th>
@@ -201,6 +209,12 @@ $('.fa-plus').click(function() {
 });
 $('.fa-edit').click(function() {
   window.location.href = $(this).attr("href");
+});
+$('#monthly').click(function() {
+  alert("Feature coming soon");
+});
+$('#yearly').click(function() {
+  alert("Feature coming soon");
 });
 
 $(document).ready(function() {

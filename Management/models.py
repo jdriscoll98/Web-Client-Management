@@ -9,7 +9,7 @@ from django.dispatch import receiver
 # Create your models here.
 
 class Company(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     members = models.ManyToManyField(User)
     stripe_secret = models.CharField(max_length=200, blank=True, null=True)
     stripe_public = models.CharField(max_length=200, blank=True, null=True)
