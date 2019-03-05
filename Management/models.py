@@ -17,6 +17,9 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('management:company_page', kwargs={'pk':self.pk})
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -33,7 +36,7 @@ class Client(models.Model):
         return str(self.name)
 
     def get_absolute_url(self):
-        return reverse('website:homepage_view')
+        return reverse('management:company_page', kwargs={'pk': self.company.pk})
 
     def get_cost(self, label):
         type = Cost.TYPES.get_value(label)

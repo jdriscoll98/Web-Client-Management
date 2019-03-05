@@ -83,7 +83,7 @@
 				<button class="g-recaptcha btn btn-success col-md-8 " data-sitekey="{{ recaptcha_site_key }}" data-callback='onSubmit'>Login</button>
 			</form>
 			<br />
-			<text id="create-account" class="secondary-color" data-toggle="modal" data-target="#create-account-modal"><strong>Create an Account</strong></text>
+			<text id="create-account" class="secondary-color" href="{% url 'website:register' %}"><strong>Create an Account</strong></text>
 		</div>
 	</div>
 </div>
@@ -100,7 +100,7 @@
 
 			 <!-- Modal body -->
 			 <div class="modal-body center">
-			
+
 			 </div>
 
 			 <!-- Modal footer -->
@@ -134,6 +134,9 @@ $('#submit').click(function(e) {
 			}
 	});
 })
+$('#create-account').click(function() {
+	window.location.href = $(this).attr('href');
+});
 //------------------------------------------------------------------------------
 </script>
 {% endblock js %}

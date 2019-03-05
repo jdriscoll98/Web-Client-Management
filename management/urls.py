@@ -18,6 +18,9 @@ urlpatterns = [
 		url(r'^update-project/(?P<pk>\d+)/(?P<pk2>\d+)$', UpdateProject.as_view(), name='update_project'),
 		# company mangement
 		url(r'^company-page/(?P<pk>\d+)/$', CompanyPage.as_view(), name='company_page'),
+		url(r'^add-company/$', AddCompany.as_view(), name='add_company'),
+		url(r'^edit-company/(?P<pk>\d+)/$', UpdateCompany.as_view(), name='edit_company'),
+		url(r'^delete-company/(?P<pk>\d+)/$', DeleteCompany.as_view(), name='delete_company'),
 		# member views
 		url(r'^add-member/(?P<pk>\d+)/$', AddMember.as_view(), name='add_member'),
 	]

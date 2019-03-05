@@ -20,3 +20,8 @@ class ClientCostForm(forms.ModelForm):
     class Meta:
         model = Cost
         fields = ('__all__')
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        exclude =  ['company']

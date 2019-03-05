@@ -9,14 +9,15 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import ClientCost, CompanyCost, Service, Cost
-from .utils import create_costs, send_invoice, get_invoices, get_client_costs
+from .utils import (create_costs, send_invoice, get_invoices,
+                    get_client_costs, get_invoice_items)
 from .forms import InvoiceForm
 from management.models import Client, Project, Company
 from .mixins import DeleteViewAjax
 from datetime import datetime
 import stripe
 import json
-from .forms import CompanyCostForm, ClientCostForm
+from .forms import CompanyCostForm, ClientCostForm, ServiceForm
 #cost views
 class AddCost(LoginRequiredMixin, CreateView):
     form_class = ClientCost
@@ -75,15 +76,17 @@ class AddService(LoginRequiredMixin, CreateView):
         return next
 
 
-class UpdateService(LoginRequiredMixin, CreateView):
+class UpdateService(LoginRequiredMixin, UpdateView):
     model = Service
-    fields = '__all__'
+    fields = ('name', 'cost_per_hour')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Modify Service'
         return context
 
+class DeleteService(LoginRequiredMixin, DeleteViewAjax):
+    model = Service
 #cost generator
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
@@ -109,6 +112,16 @@ class ManageInvoices(LoginRequiredMixin, TemplateView):
         invoices = get_invoices()
         context =  {
             'invoices' : invoices
+        }
+        return context
+
+class InvoiceDetails(LoginRequiredMixin, TemplateView):
+    template_name = 'financial/invoice_items.html'
+
+    def get_context_data(self, *args, **kwargs):
+        invoice_items = get_invoice_items(self.kwargs.get('id'))
+        context = {
+            'invoice_items': invoice_items
         }
         return context
 

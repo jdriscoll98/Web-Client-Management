@@ -52,27 +52,22 @@ th {
           <tr>
             <th colspan="4" class="heading">
               <h2 id="type">
-                Open Invoices
-                <i class='fa fa-plus' href="{% url 'financial:create_invoice' %}"></i>
+                Invoice Items
               </h2>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>Client</th>
-            <th>Invoice ID</th>
             <th>Charge</th>
-            <th>Due Date</th>
+            <th>Item ID</th>
+            <th>Amount</th>
           </tr>
-              {% for invoice in invoices %}
+              {% for item in invoice_items %}
               <tr>
-                <td>{% get_customer invoice.customer %}</td>
-                <td>{{ invoice.id }}
-                    <i class="fas fa-info" id="info" href="{% url 'financial:invoice_items' invoice.id %}"></i>
-                </td>
-                <td>${% get_amount invoice.amount_remaining %}</td>
-                <td>{% get_date invoice.due_date %}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.id }}</td>
+                <td>{% get_amount item.amount %}</td>
               </tr>
               {% endfor %}
           </tbody>

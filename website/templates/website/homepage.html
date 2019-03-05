@@ -20,6 +20,7 @@
 }
 .fa-plus {
   color: var(--primary-color) !important;
+  margin-top: 5px;
 }
 thead {
   background-color: var(--secondary-color) !important;
@@ -38,17 +39,22 @@ th {
 .title {
   background-color: var(--secondary-color) !important;
   color: white;
+  text-align: center;
 
   border-radius: 10px;
   padding: 10px;
   padding-bottom: 15px;
 
 }
+.company-select {
+  width: 90%;
+  margin-right: 10px;
+}
 </style>
 {% endblock custom_css %}
 
 {% block content %}
-<div class="container">
+<div style="max-width: 50%;" class="container">
   <div class="row">
     <div class="col">
       <br><br>
@@ -56,24 +62,43 @@ th {
     </div>
   </div>
   <div class="row">
+    {% if companies %}
     <div class="col">
       <table class="table">
         <thead>
-        <tr><th>
+        <tr><th colspan="2">
         <h3 style="text-align: center;">Please select a company below</h3>
         </thead>
         <tbody>
           <tr><td>
-      <select id="company">
+      <select class="company-select" id="company">
         <option>-----------------</option>
         {% for company in companies %}
         <option id="company-{{ company.pk }}" href="{% url 'management:company_page' company.pk %}" value="{{ company.pk }}">{{ company }}</option>
         {% endfor %}
-      </select></td>
-      </tr>.
+      </select>
+    </td>
+    <td>
+      <h3 class="fa fa-plus" id="add" href="{% url 'management:add_company' %}"></h3>
+        </td>
+      </tr>
       </tbody>
       </table>
       <button class="btn btn-success" id="manage">Manage Company</button>
+    </div>
+    {% else %}
+    <div class="col">
+      <table class="table">
+        <thead>
+        <tr><th>
+        <h3 style="text-align: center;">You are not part of any companies!</h3>
+        </thead>
+        <tbody>
+          <tr><td>
+            <button class="btn btn-success" id="add" href="{% url 'management:add_company' %}">Add a new company</button></td>
+      </tbody>
+      </table>
+    {% endif %}
     </div>
   </div>
 {% include 'website/server_messages.html' %}
@@ -86,6 +111,9 @@ th {
     var id = $('#company').val();
     window.location.href = $('#company-' + id).attr("href");
   })
+  $('#add').click(function() {
+    window.location.href = $(this).attr('href');
+  });
 
 </script>
 {% endblock js %}

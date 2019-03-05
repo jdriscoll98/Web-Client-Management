@@ -3,14 +3,19 @@ from django.urls import reverse
 from enum import Enum
 from datetime import timedelta
 import stripe
+
 # Create your models here.
 
 class Service(models.Model):
     name = models.CharField(max_length=100, unique="True")
+    company = models.ForeignKey('management.Company', on_delete=models.CASCADE)
     cost_per_hour = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('management:company_page', kwargs={'pk': self.company.pk})
 
 class Cost(models.Model):
     #choices style from Two scoops of Django 1.11 best practice

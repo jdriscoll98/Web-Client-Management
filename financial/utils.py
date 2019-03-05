@@ -78,14 +78,14 @@ def send_invoice(client, amount, description, due_date):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     try:
         if not client.customer_id:
-            customer_id = stripe.Customer.create(
+            customer = stripe.Customer.create(
                 description = "customer for %s" % (str(client)),
                 email = client.email
             )
-            client.customer_id = customer_id['id']
+            print(customer['id'])
+            client.customer_id = customer['id']
             client.save()
-        else:
-            customer_id = client.customer_id
+        customer_id = client.customer_id
         stripe.InvoiceItem.create(
             customer=customer_id,
             amount=amount * 100,
@@ -110,6 +110,11 @@ def get_invoices():
     invoice_list = []
     invoices = stripe.Invoice.list(limit=100)['data']
     return invoices
+
+def get_invoice_items(id):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    items = stripe.InvoiceItem.list(limit=100, invoice=id)
+    return items
 
 def get_client_costs(company, type):
     costs = []

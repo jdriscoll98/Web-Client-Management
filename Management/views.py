@@ -4,11 +4,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from .models import Client, Project, Company
 from financial.models import ClientCost, CompanyCost, Service
 from .mixins import DeleteViewAjax
-from .forms import ProjectForm, ClientForm, MemberForm
+from .forms import ProjectForm, ClientForm, MemberForm, CompanyForm
 from .utils import get_income_cost, get_total
 
 # client views
@@ -27,10 +27,6 @@ class AddClient(LoginRequiredMixin, CreateView):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
         initial['company'] = company
         return initial
-
-    def get_success_url(self, **kwargs):
-        next = self.request.POST.get('next', None)
-        return next
 
 class DeleteClient(LoginRequiredMixin, DeleteViewAjax):
     model = Client
@@ -145,30 +141,34 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
             'servers': get_income_cost(company, servers),
             'project': get_income_cost(company, project),
             'total': get_total(company),
-            'services': Service.objects.all()
+            'services': Service.objects.filter(company=company)
 
         }
         return context
 
 
 class AddCompany(LoginRequiredMixin, CreateView):
-    model = Company
-    fields = '__all__'
-    success_url = reverse_lazy('website:homepage_view')
+    form_class = CompanyForm
+    template_name = 'management/company_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Add Company'
         return context
 
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(*args, **kwargs)
+        initial['members'] = [self.request.user]
+        return initial
+
 class DeleteCompany(LoginRequiredMixin, DeleteViewAjax):
     model = Company
 
 class UpdateCompany(LoginRequiredMixin, UpdateView):
     model = Company
-    fields = '__all__'
+    fields = ('name',)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Client'
+        context['title'] = 'Update Company'
         return context

@@ -46,7 +46,6 @@ th {
   padding-bottom: 15px;
 
 }
-
   </style>
 {% endblock custom_css %}
 
@@ -55,7 +54,9 @@ th {
 <div class="container">
   <div class="row">
     <div class="col">
-      <h2 class="title">{{ company }} Homepage</h2>
+      <h2 class="title">{{ company }} Homepage
+        <i class="far fa-edit" id="edit-company" href="{% url 'management:edit_company' company.pk %}"></i>
+      </h2>
     </div>
   </div>
   <div class="row">
@@ -76,7 +77,7 @@ th {
           <tbody id="client-table">
         {% for client in clients %}
         <tr id="row-{{ client.pk }}" ><td class="client" href="{% url 'management:detail_client' client.pk %}"><h5>{{ client.name }}</h5></td>
-        <td><i id="{{ client.pk }}" style="color:red" class="fas fa-trash-alt" href="{% url 'management:delete_client' client.pk %}"></i></tr>
+        <td><i id="{{ client.pk }}" style="color:red" class="fas fa-trash-alt delete-client" href="{% url 'management:delete_client' client.pk %}"></i></tr>
         {% endfor %}
         </tbody>
         </table>
@@ -149,7 +150,7 @@ th {
             </tbody>
             </div>
     <div class="col">
-      <table id="cost-table" class="table">
+      <table class="table">
         <thead>
           <tr>
             <th colspan="4" class="heading">
@@ -160,17 +161,18 @@ th {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="service-table">
           <tr>
             <th>Service</th>
             <th>Hourly Rate</th>
             <th>Edit</th>
           </tr>
           {% for service in services %}
-            <tr>
+            <tr id="row-{{ service.pk }}">
               <td>{{ service.name }}</td>
               <td>{{ service.cost_per_hour }}</td>
-              <td><i class="fas fa-edit" href="{% url 'financial:update_service' %}"></i></td>
+              <td><i class="fas fa-edit" href="{% url 'financial:update_service' service.pk %}"></i>
+              <i id="{{ service.pk }}" class="fas fa-trash-alt delete-service" href="{% url 'financial:delete_service' service.pk %}"></i></td>
             </tr>
           {% endfor %}
           </tbody>
@@ -186,6 +188,9 @@ th {
 $('.fa-plus').click(function() {
   window.location.href = $(this).attr("href");
 });
+$('.fa-edit').click(function() {
+  window.location.href = $(this).attr("href");
+});
 
 $(document).ready(function() {
   $('.value').each(function(){
@@ -199,7 +204,7 @@ $(document).ready(function() {
 });
 
 
-$('.fa-trash-alt').click(function() {
+$('.delete-client').click(function() {
   var id = $(this).attr('id');
   if(confirm("Are you sure you want to delete this client?")) {
     $.get($(this).attr('href'), {}, function(data) {
@@ -208,6 +213,21 @@ $('.fa-trash-alt').click(function() {
       }
       else {
         console.log("Could not delete client at this time!");
+      }
+    });
+  }
+});
+
+$('.delete-service').click(function() {
+  var id = $(this).attr('id');
+  if(confirm("Are you sure you want to delete this service?")) {
+    $.get($(this).attr('href'), {}, function(data) {
+      if(data.deleted) {
+        console.log(data.deleted);
+        $('#service-table #row-' + id).remove();
+      }
+      else {
+        console.log("Could not delete service at this time!");
       }
     });
   }
