@@ -31,8 +31,10 @@ class AddCost(LoginRequiredMixin, CreateView):
         initial['client'] = client
         return initial
 
-class AddCompanycost(AddCost):
-    form_class = CompanyCost
+class AddCompanycost(LoginRequiredMixin, CreateView):
+    model = CompanyCost
+    template_name = 'financial/cost_form.html'
+    fields = '__all__'
 
 class UpdateCost(LoginRequiredMixin, UpdateView):
     model = ClientCost
@@ -91,6 +93,7 @@ class DeleteService(LoginRequiredMixin, DeleteViewAjax):
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {
+            'company': self.kwargs.get('pk'),
             'services' : Service.objects.all(),
             'clients' : Client.objects.all(),
             'projects': Project.objects.all(),
@@ -101,16 +104,19 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
         data = self.request.POST
         if create_costs(data):
-            return redirect(reverse('website:homepage_view'))
-        return redirect(reverse('financial:estimate'))
+            return redirect(reverse('management:company_page', kwargs={'pk':self.kwargs.get('pk')}))
+        return redirect(reverse('financial:estimate', kwargs={'pk':self.kwargs.get('pk')}))
 
 # invoice views
 class ManageInvoices(LoginRequiredMixin, TemplateView):
     template_name = 'financial/invoices.html'
 
     def get_context_data(self, *args, **kwargs):
-        invoices = get_invoices()
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        key = company.stripe_secret
+        invoices = get_invoices(key)
         context =  {
+            'company': company.pk,
             'invoices' : invoices
         }
         return context
@@ -119,7 +125,9 @@ class InvoiceDetails(LoginRequiredMixin, TemplateView):
     template_name = 'financial/invoice_items.html'
 
     def get_context_data(self, *args, **kwargs):
-        invoice_items = get_invoice_items(self.kwargs.get('id'))
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        key = company.stripe_secret
+        invoice_items = get_invoice_items(self.kwargs.get('id'), key)
         context = {
             'invoice_items': invoice_items
         }

@@ -166,7 +166,7 @@ class DeleteCompany(LoginRequiredMixin, DeleteViewAjax):
 
 class UpdateCompany(LoginRequiredMixin, UpdateView):
     model = Company
-    fields = ('name',)
+    fields = ('name', 'stripe_secret', 'stripe_public')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

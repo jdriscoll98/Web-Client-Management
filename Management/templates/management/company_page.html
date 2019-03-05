@@ -46,6 +46,9 @@ th {
   padding-bottom: 15px;
 
 }
+.nav {
+  display: inline;
+}
   </style>
 {% endblock custom_css %}
 
@@ -57,6 +60,14 @@ th {
       <h2 class="title">{{ company }} Homepage
         <i class="far fa-edit" id="edit-company" href="{% url 'management:edit_company' company.pk %}"></i>
       </h2>
+      <div class="row">
+        <div class="col">
+      <h5 class="title"><a class="nav-link" href="{% url 'financial:estimate' company.pk %}">Estimated Cost Generator</a></h5>
+      </div>
+      <div class="col">
+      <h5 class="title"><a class="nav-link" href="{% url 'financial:invoice' company.pk  %}">Invoices</a></h5>
+      </div>
+      </div>
     </div>
   </div>
   <div class="row">

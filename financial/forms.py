@@ -1,6 +1,6 @@
 from django import forms
 from management.models import Client, Project
-from .models import Service, Cost
+from .models import Service, Cost, CompanyCost
 
 class InvoiceForm(forms.Form):
     client = forms.ModelChoiceField(queryset=Client.objects.all())
@@ -10,11 +10,8 @@ class InvoiceForm(forms.Form):
 
 class CompanyCostForm(forms.ModelForm):
     class Meta:
-        model = Cost
-        exclude = ['project', 'client_payment']
-        widgets = {
-            'client': forms.HiddenInput()
-        }
+        model = CompanyCost
+        fields = '__all__'
 
 class ClientCostForm(forms.ModelForm):
     class Meta:

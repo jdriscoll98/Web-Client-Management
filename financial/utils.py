@@ -1,12 +1,13 @@
 from .models import Service, ClientCost, Cost
-from management.models import Client, Project
-from django.conf import settings
+from management.models import Client, Project, Company
 import stripe
 import json
 from datetime import datetime
 
 def create_costs(data):
     try:
+        company = Company.objects.get(pk=data['company'])
+        key = company.stripe_secret
         client = Client.objects.get(name=data['client'])
         project = Project.objects.get(name=data['project'])
         datetime_object = datetime.strptime(data['due_date'], '%Y-%m-%d')
@@ -29,7 +30,7 @@ def create_costs(data):
         if not created:
             cost.amount += project_cost
             cost.save()
-        send_invoice(client, int(project_cost), str(project), due_date)
+        create_invoice_item(key, client, int(project_cost), str(project))
         server_hosting = Cost.TYPES.get_value('server_hosting')
         domains = Cost.TYPES.get_value('domains')
         elementor = Cost.TYPES.get_value('elementor')
@@ -45,6 +46,7 @@ def create_costs(data):
         if not created:
             cost.amount += int(data['Server Hosting'])
             cost.save()
+        create_invoice_item(key, client, int(cost.amount), 'Server Hosting')
         cost, created = ClientCost.objects.get_or_create(
             client=client,
             type=domains,
@@ -57,6 +59,7 @@ def create_costs(data):
         if not created:
             cost.amount += int(data['Domains'])
             cost.save()
+        create_invoice_item(key, client, int(cost.amount), 'Domain')
         cost, created = ClientCost.objects.get_or_create(
             client=client,
             type=elementor,
@@ -69,13 +72,40 @@ def create_costs(data):
         if not created:
             cost.amount += int(data['Elementor'])
             cost.save()
+        create_invoice_item(key, client, int(cost.amount), 'Elementor')
+        send_invoice(key, client, due_date)
         return True
     except Exception as e:
         print(e)
         return False
 
-def send_invoice(client, amount, description, due_date):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+def send_invoice(key, client, due_date):
+    stripe.api_key = key
+    try:
+        if not client.customer_id:
+            customer = stripe.Customer.create(
+                description = "customer for %s" % (str(client)),
+                email = client.email
+            )
+            print(customer['id'])
+            client.customer_id = customer['id']
+            client.save()
+        customer_id = client.customer_id
+        print('item created')
+        invoice = stripe.Invoice.create(
+            customer=customer_id,
+            billing='send_invoice',
+            due_date = due_date,
+        )
+        print('invoice created')
+        invoice.send_invoice()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def create_invoice_item(key, client,  amount, description):
+    stripe.api_key = key
     try:
         if not client.customer_id:
             customer = stripe.Customer.create(
@@ -92,29 +122,27 @@ def send_invoice(client, amount, description, due_date):
             currency="usd",
             description=description,
         )
-        print('item created')
-        invoice = stripe.Invoice.create(
-            customer=customer_id,
-            billing='send_invoice',
-            due_date = due_date,
-        )
-        print('invoice created')
-        invoice.send_invoice()
         return True
     except Exception as e:
         print(e)
         return False
 
-def get_invoices():
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+def get_invoices(key):
+    stripe.api_key = key
     invoice_list = []
     invoices = stripe.Invoice.list(limit=100)['data']
     return invoices
 
-def get_invoice_items(id):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    items = stripe.InvoiceItem.list(limit=100, invoice=id)
-    return items
+def get_invoice_items(id, key):
+    try:
+        stripe.api_key = key
+        invoice_items = stripe.InvoiceItem.list(limit=100, invoice=id)
+    except Exception as e:
+        print(e)
+        invoice_items = []
+
+    return invoice_items
+
 
 def get_client_costs(company, type):
     costs = []

@@ -79,3 +79,6 @@ class CompanyCost(Cost):
 
     def __str__(self):
         return str(self.company) + ' | ' + self.type
+
+    def get_absolute_url(self):
+        return reverse('management:company_page', kwargs={'pk':self.company.pk})
