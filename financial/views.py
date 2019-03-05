@@ -92,10 +92,11 @@ class DeleteService(LoginRequiredMixin, DeleteViewAjax):
 #cost generator
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
+        company =  Company.objects.get(pk=self.kwargs.get('pk'))
         context = {
             'company': self.kwargs.get('pk'),
-            'services' : Service.objects.all(),
-            'clients' : Client.objects.all(),
+            'services' : Service.objects.filter(company=company),
+            'clients' : Client.objects.filter(company=company),
             'projects': Project.objects.all(),
             'types': [x.value for x in Cost.TYPES if x.value[0] != 'pj' ]
         }
