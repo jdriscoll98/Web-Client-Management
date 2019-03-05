@@ -22,5 +22,6 @@ urlpatterns = [
 		url(r'^edit-company/(?P<pk>\d+)/$', UpdateCompany.as_view(), name='edit_company'),
 		url(r'^delete-company/(?P<pk>\d+)/$', DeleteCompany.as_view(), name='delete_company'),
 		# member views
-		url(r'^add-member/(?P<pk>\d+)/$', AddMember.as_view(), name='add_member'),
+		url(r'^add-new-member/(?P<pk>\d+)/$', AddNewMember.as_view(), name='add_new_member'),
+		url(r'^add-member/(?P<company>\d+)/(?P<user>\d+)/$', UpdateCompanyMembers.as_view(), name='add_member'),
 	]

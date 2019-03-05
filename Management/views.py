@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.views.generic.base import TemplateView
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from .models import Client, Project, Company
@@ -50,7 +52,7 @@ class DetailClient(LoginRequiredMixin, DetailView):
         return context
 
 # member views
-class AddMember(LoginRequiredMixin, FormView):
+class AddNewMember(LoginRequiredMixin, FormView):
     form_class = MemberForm
     template_name = 'management/member_form.html'
 
@@ -172,3 +174,29 @@ class UpdateCompany(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Update Company'
         return context
+
+class UpdateCompanyMembers(LoginRequiredMixin, View):
+    def get(self, *args,**kwargs):
+        company = Company.objects.get(pk=self.kwargs.get('company'))
+        current_members = company.members.all()
+        print(current_members)
+        potential_members = User.objects.exclude(id__in=current_members.values_list('id', flat=True))
+        print(potential_members)
+        context = {
+            'company': company,
+            'users': User.objects.exclude(id__in=current_members.values_list('id', flat=True)),
+        }
+        return render(self.request, 'management/add_members.html', context)
+
+    def post(self, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=self.kwargs.get('user'))
+            company = Company.objects.get(pk=self.kwargs.get('company'))
+            company.members.add(user)
+            company.save()
+            success = True
+            message = "Member added successfully"
+        except Exception as e:
+            success = False
+            message = "Error adding memeber" + str(e)
+        return JsonResponse({'success':success, 'message': message})

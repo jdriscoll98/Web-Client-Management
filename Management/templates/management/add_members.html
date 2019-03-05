@@ -1,0 +1,91 @@
+{% extends 'website/base.html' %}
+
+{% block custom_css %}
+<style type="text/css">
+  .btn {
+    width: 100%;
+    background-color: var(--primary-color) !important;
+  }
+  .fa-edit {
+      color: var(--primary-color) !important;
+  }
+  .fa-plus {
+    color: var(--primary-color) !important;
+  }
+  thead {
+    background-color: var(--secondary-color) !important;
+    color: white;
+  }
+  th {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+  .label {
+    font-weight: bold;
+  }
+  .heading {
+    text-align: center;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+{% include 'website/server_messages.html' %}
+<div class="container">
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <table class="table"> {% csrf_token %}
+      <thead>
+        <tr>
+          <th colspan="2" class="heading">
+            <h2>Select Memebers
+              <i class="fa fa-plus" id="new" href="{% url 'management:add_new_member' company.pk %}"</h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="user-table">
+        <tr><th>User</th>
+            <th>Add?</th>
+        </tr>
+
+        {% for user in users %}
+        <tr id="row-{{ user.pk }}">
+          <td>
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3?
+          </td>
+          <td>
+            <h3><i class="fa fa-plus add"  id="{{ user.pk }}" href="{% url 'management:add_member' company.pk user.pk %}"></i>
+              </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}
+
+
+{% block js %}
+<script>
+$('.add').click(function(e) {
+	setup_ajax();
+	e.preventDefault();
+	$.ajax({ // create an AJAX call...
+			url: $(this).attr('href'), // the file to call
+			type: 'POST', // GET or POST
+			data: {  'csrfmiddlewaretoken': '{{ csrf_token }}' } , // get the form data
+			success: function(response) { // on success..
+				if(response.success) {
+          location.reload();
+				}
+				else {
+					alert(response.message)
+				}
+			}
+	});
+});
+
+$('#new').click(function() {
+  window.location.href= $(this).attr('href');
+})
+</script>
+{% endblock js %}
