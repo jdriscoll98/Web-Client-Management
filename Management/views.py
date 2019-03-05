@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from .models import Client, Project, Company
 from financial.models import ClientCost, CompanyCost, Service
 from .mixins import DeleteViewAjax
-from .forms import ProjectForm, ClientForm
+from .forms import ProjectForm, ClientForm, MemberForm
 from .utils import get_income_cost, get_total
 
 # client views
@@ -51,6 +52,34 @@ class DetailClient(LoginRequiredMixin, DetailView):
         context['projects'] = Project.objects.filter(client=self.object)
         context['client_costs'] = ClientCost.objects.filter(client=self.object)
         return context
+
+# member views
+class AddMember(LoginRequiredMixin, FormView):
+    form_class = MemberForm
+    template_name = 'management/member_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = reverse('management:company_page', kwargs={'pk':
+                                                        self.kwargs.get('pk')})
+        return context
+
+    def form_valid(self, form, **kwargs):
+        try:
+            self.object = form.save()
+            company = Company.objects.get(pk=self.kwargs.get('pk'))
+            company.members.add(self.object)
+            company.save()
+        except Exception as e:
+            print(e)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+
+    def get_success_url(self, **kwargs):
+        next = self.request.POST.get('next', reverse('website:homepage_view'))
+        return next
+
 
 # project views
 class AddProject(LoginRequiredMixin, CreateView):
@@ -109,6 +138,7 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
         context = {
             'company': company,
             'clients': Client.objects.filter(company=company),
+            'members': company.members.all(),
             'costs': CompanyCost.objects.filter(company=company),
             'elementor': get_income_cost(company, elementor),
             'domains': get_income_cost(company, domains),

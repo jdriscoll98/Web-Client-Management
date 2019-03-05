@@ -82,7 +82,7 @@ def send_invoice(client, amount, description, due_date):
                 description = "customer for %s" % (str(client)),
                 email = client.email
             )
-            client.customer_id = customer_id
+            client.customer_id = customer_id['id']
             client.save()
         else:
             customer_id = client.customer_id

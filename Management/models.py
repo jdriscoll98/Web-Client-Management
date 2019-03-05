@@ -4,6 +4,8 @@ from datetime import timedelta
 from financial.models import ClientCost, CompanyCost
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 class Company(models.Model):
@@ -14,6 +16,7 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100, unique=True)

@@ -127,6 +127,27 @@ th {
       </div>
     </div>
     <div class="row">
+      <div class="col">
+        <table id="member-table" class="table">
+          <thead>
+            <tr>
+              <th colspan="2" class="heading">
+                <h2 id="member">
+                  Members
+                  <i class='fa fa-plus' href="{% url 'management:add_member' company.pk %}"></i>
+                  </h2>
+                </th>
+              </tr>
+            </thead>
+          <tbody>
+            {% for member in members %}
+              <tr><td><h5 style="text-align: center;">{{ member.first_name }} {{ member.last_name }}</h5></td>
+                <td><i class="fa fa-trash-alt" href=""></i></td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+            </div>
     <div class="col">
       <table id="cost-table" class="table">
         <thead>
@@ -155,7 +176,7 @@ th {
           </tbody>
       </table>
     </div>
-  </div>
+    </div>
 </div>
 {% endblock content %}
 
