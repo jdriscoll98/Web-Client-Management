@@ -13,7 +13,9 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         exclude = ['customer_id']
-        widgets = {'company': forms.HiddenInput()}
+        widgets = {
+        'company': forms.HiddenInput(),
+        }
 
 class MemberForm(UserCreationForm):
     first_name = forms.CharField(max_length=30)

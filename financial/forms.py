@@ -21,7 +21,10 @@ class ClientCostForm(forms.ModelForm):
 class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
-        exclude =  ['company']
+        fields = '__all__'
+        widgets = {
+            'company': forms.HiddenInput()
+        }
 
 class CostTypeForm(forms.ModelForm):
     class Meta:

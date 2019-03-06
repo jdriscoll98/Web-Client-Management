@@ -12,6 +12,7 @@ from financial.models import ClientCost, CompanyCost, Service, CostType
 from .mixins import DeleteViewAjax
 from .forms import ProjectForm, ClientForm, MemberForm, CompanyForm
 from .utils import get_income_cost, get_total
+from financial.utils import get_invoices
 
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
@@ -129,6 +130,9 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
+        self.request.session['company'] = company.pk
+        key = company.stripe_secret
+        invoices = get_invoices(key)
         context = {
             'company': company,
             'clients': Client.objects.filter(company=company),
@@ -136,7 +140,8 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
             'costs': CompanyCost.objects.filter(company=company),
             'types': CostType.objects.filter(company=company),
             'total': get_total(company),
-            'services': Service.objects.filter(company=company)
+            'services': Service.objects.filter(company=company),
+            'invoices' : invoices
 
         }
         return context

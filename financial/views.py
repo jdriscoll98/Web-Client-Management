@@ -12,8 +12,7 @@ from .models import ClientCost, CompanyCost, Service, CostType
 from management.models import Client, Project, Company
 from .forms import (CompanyCostForm, ClientCostForm, ServiceForm, InvoiceForm,
                     CostTypeForm)
-from .utils import (create_costs, send_invoice, get_invoices,
-                    get_client_costs, get_invoice_items)
+from .utils import (create_costs, send_invoice, get_invoices, get_invoice_items)
 from .mixins import DeleteViewAjax
 
 from datetime import datetime
@@ -50,7 +49,7 @@ class CostView(LoginRequiredMixin, TemplateView):
             'title': type.name,
             'company': company,
             'company_costs': CompanyCost.objects.filter(type=type),
-            'client_costs': get_client_costs(company, type)
+            'client_costs': company.get_client_costs(type)
         }
 
         return context
@@ -97,20 +96,20 @@ class DeleteCostType(LoginRequiredMixin, DeleteViewAjax):
 
 #service views
 class AddService(LoginRequiredMixin, CreateView):
-    model = Service
-    fields = '__all__'
+    form_class = ServiceForm
+    template_name = 'financial/service_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Add Service'
-        context['next'] = reverse('management:company_page',kwargs={'pk': self.kwargs.get('pk')})
         return context
 
-    def get_success_url(self, **kwargs):
-        print('here')
-        next = self.request.POST.get('next', None)
-        print('now here')
-        return next
+    def get_initial(self):
+        initial = super(AddService, self).get_initial()
+        initial = initial.copy()
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        initial['company'] = company
+        return initial
 
 
 class UpdateService(LoginRequiredMixin, UpdateView):

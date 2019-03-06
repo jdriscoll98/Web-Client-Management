@@ -64,7 +64,14 @@ input, select {
 
 }
 
+.btn:hover {
+  transform: scale(.9);
+}
 
+.btn {
+  transition: transform .3s;
+  font-size: 30px;
+}
 
 table, .table {
 

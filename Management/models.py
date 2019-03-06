@@ -20,6 +20,19 @@ class Company(models.Model):
     def get_absolute_url(self):
         return reverse('management:company_page', kwargs={'pk':self.pk})
 
+    def get_project_income(self):
+        amount = 0
+        for client in Client.objects.filter(company=self):
+            amount += sum(project.amount for project in Project.objects.filter(client=client))
+        return amount
+
+    def get_client_costs(self, type):
+        costs = []
+        for client in Client.objects.filter(company=self):
+            for cost in ClientCost.objects.filter(client=client):
+                costs.append(cost)
+        return costs
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -28,9 +41,9 @@ class Client(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     email = models.EmailField(blank=True, null=True)
-    folder_link = models.URLField(blank=True, null=True)
-    additional_information = models.CharField(max_length=250, blank=True, null=True)
-    amount_owed = models.IntegerField(blank=True, null=True)
+    folder_link = models.URLField(blank=True, null=True, unique=True)
+    additional_information = models.TextField(blank=True, null=True)
+    amount_owed = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return str(self.name)
@@ -65,8 +78,8 @@ class Project(models.Model):
     name = models.CharField(max_length=100, unique=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=9, decimal_places=2, default=0)
-    github_link = models.URLField(blank=True, null=True)
-    folder_link = models.URLField(blank=True, null=True)
+    github_link = models.URLField(blank=True, null=True, unique=True)
+    folder_link = models.URLField(blank=True, null=True, unique=True)
 
     def __str__(self):
         return str(self.name)

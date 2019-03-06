@@ -7,7 +7,7 @@
   }
 
 #myInput {
-  width: 50%;
+  width: 90%;
   border-radius: 10px;
   border-color: var(--secondary-color) !important;
   outline: none;
@@ -52,6 +52,9 @@ th {
 .value {
   /* float: right; */
 }
+.table {
+  display: table;
+}
   </style>
 {% endblock custom_css %}
 
@@ -61,15 +64,12 @@ th {
 <div class="container">
   <div class="row">
     <div class="col">
-      <h2 class="title">{{ company }} Homepage
+      <h2 style="text-align: center;">{{ company }} Homepage
         <i class="far fa-edit" id="edit-company" href="{% url 'management:edit_company' company.pk %}"></i>
       </h2>
+      <br/>
       <div class="row">
         <div class="col">
-      <h5 class="title"><a class="nav-link" href="{% url 'financial:estimate' company.pk %}">Estimated Cost Generator</a></h5>
-      </div>
-      <div class="col">
-      <h5 class="title"><a class="nav-link" href="{% url 'financial:invoice' company.pk  %}">Invoices</a></h5>
       </div>
       </div>
     </div>
@@ -97,6 +97,8 @@ th {
         </tbody>
         </table>
     </div>
+  </div>
+  <div class="row">
       <div class="col">
       <table class="table">
         <thead>
@@ -117,6 +119,9 @@ th {
                 <td class="value">${% get_income type company %}</td>
               </tr>
             {% endfor %}
+            <tr><th>Projects:</th>
+                <td class="value">${{ company.get_project_income }}</td>
+            </tr>
             <tr style="border-top: 1px solid black;">
               <th>
                 Total:
@@ -127,7 +132,39 @@ th {
           </tbody>
       </table>
       </div>
+    <div class="col">
+      <table id="cost-table" class="table">
+        <thead>
+          <tr>
+            <th colspan="5" class="heading">
+              <h2 id="type">
+                Open Invoices
+                <i class='fa fa-plus' href="{% url 'financial:create_invoice' %}"></i>
+              </h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Client</th>
+            <th>Charge</th>
+            <th>Due Date</th>
+            <th>Details</th>
+          </tr>
+              {% for invoice in invoices %}
+              <tr>
+                <td>{% get_customer invoice.customer %}</td>
+                <td>${% get_amount invoice.amount_remaining %}</td>
+                <td>{% get_date invoice.due_date %}</td>
+              <td>
+                <i class="fas fa-info" id="info" href="{% url 'financial:invoice_items' company.pk invoice.id %}"></i>
+                </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
     </div>
+  </div>
     <div class="row">
       <div class="col">
         <table id="member-table" class="table">
@@ -149,6 +186,7 @@ th {
             {% endfor %}
 
             </tbody>
+            </table>
             </div>
     <div class="col">
       <table class="table">

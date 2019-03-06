@@ -67,7 +67,7 @@ th {
         </tr>
         <tr>
           <td colspan="2">
-          <a class="btn btn-primary" href="{{ object.folder_link }}">Link to Drive</a>
+          <a class="btn btn-primary" href="{{ object.folder_link }}" target="_blank">Link to Drive</a>
           </td>
         </tr>
       </tbody>
@@ -88,8 +88,8 @@ th {
         {% for project in projects %}
         <tr id="row-{{ project.pk }}">
           <td class="project" href="{% url 'management:update_project' pk=project.pk pk2=object.pk %}"><strong>{{ project.name }}</strong></td>
-          <td><i class="fab fa-google" href="{{ project.folder_link}}"></i></td>
-          <td><i class="fab fa-github" href="{{ project.github_link }}"></i></td>
+          <td><a class="fab fa-google" href="{{ project.folder_link}}" target="_blank"></a></td>
+          <td><a class="fab fa-github" href="{{ project.github_link }}" target="_blank"></a></td>
           <td><i id="{{ project.pk }}" class="fas fa-trash-alt" href="{% url 'management:delete_project' project.pk %}"></i></td>
         </tr>
         {% empty %}
@@ -139,14 +139,6 @@ th {
   $('.project').click(function() {
     window.location.href = $(this).attr('href');
   });
-
-  $('.fa-google').click(function() {
-    window.location.href = $(this).attr('href');
-    })
-
-    $('.fa-github').click(function() {
-      window.location.href = $(this).attr('href');
-      })
 
   $('.fa-trash-alt').click(function() {
     var id = $(this).attr('id');

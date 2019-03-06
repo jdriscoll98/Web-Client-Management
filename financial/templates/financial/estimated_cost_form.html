@@ -40,6 +40,10 @@ th {
    float: right;
    width: 50%;
  }
+ .btn-success {
+   border-radius: 10px;
+   font-size: 40px;
+ }
 </style>
 {% endblock custom_css %}
 
@@ -76,11 +80,9 @@ th {
                     </td>
                     </tr>
             <tr><th>Due Date:</th><td><input type="date" name="due_date"></input>
-            <tr><th>Total</th><td><strong style="text-align: right; float: right;" class="total"></strong></td></tr>
       </tbody>
     </table>
     <input type="hidden" name="company" value="{{ company }}"></input>
-    <button id="save" type="submit" value="save" class="btn btn-success">Add Cost</button>
     </div>
     <div class="col-md-8 col-lg-4">
     <table class="table">
@@ -117,6 +119,19 @@ th {
     </table>
     </div>
 </div>
+<div class="h-100 row align-items-center">
+  <div style="margin-left: auto; margin-right: auto;" class="col-md-6">
+    <table class="table">
+      <thead>
+        <tr>
+        <th><h2 style="text-align: center;">Total</h2></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr><td><h2 style="text-align: center; text-weight: bold" class="total">$0</h2></td></tr>
+          </tbody>
+        </table>
+        <button id="save" type="submit" value="save" class="btn btn-success">Send as Invoice</button>
 </div>
 </form>
 {% endblock content %}

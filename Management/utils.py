@@ -36,3 +36,9 @@ def get_income_cost(company, type):
     except Exception as e:
         print(e)
         return 0
+
+def get_project_income(company):
+    amount = 0
+    for client in Client.objects.filter(company=company):
+        amount += sum(project.amount for project in Project.objects.filter(client=client))
+    return amount

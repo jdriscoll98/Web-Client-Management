@@ -51,7 +51,7 @@ class Cost(models.Model):
         abstract = True
 
     type = models.ForeignKey(CostType, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
+    amount = models.DecimalField(max_digits=9, decimal_places=2, default=0)
     last_payment_date = models.DateTimeField(auto_now=True)
 
     def get_next_payment(self):
