@@ -110,8 +110,8 @@ th {
       </thead>
       <tbody class="extras">
         {% for type in types %}
-        <tr><th>{{ type.1 }} </th><td>
-        <input id="1" class="value" type="number" value="0" name="{{ type.1 }}" required></input></td></tr>
+        <tr><th>{{ type.name }} </th><td>
+        <input id="1" class="value" type="number" value="0" name="{{ type.name }}" required></input></td></tr>
         {% endfor %}
       </tbody>
     </table>

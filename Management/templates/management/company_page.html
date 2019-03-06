@@ -101,7 +101,7 @@ th {
       <table class="table">
         <thead>
             <tr><th colspan="3" class="text-center"><h2>Income Summary
-              <i class='fa fa-plus' href="{% url 'financial:add_company_cost' company.pk %}"></i>
+              <i class='fa fa-plus' href="{% url 'financial:add_cost_type' company.pk %}"></i>
               </h2>
               </th>
             </tr>
@@ -113,8 +113,8 @@ th {
         </thead>
         <tbody>
             {% for type in types %}
-              <tr><th>{{ type.name }}</th>
-                <td>${% get_income type company %}</td>
+              <tr><th class="cost" href="{% url 'financial:cost' company.pk type.pk %}">{{ type.name }}:</th>
+                <td class="value">${% get_income type company %}</td>
               </tr>
             {% endfor %}
             <tr style="border-top: 1px solid black;">

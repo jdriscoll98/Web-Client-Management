@@ -1,4 +1,6 @@
 from django import template
+from management.models import Client
+from financial.models import ClientCost, CompanyCost
 
 register = template.Library()
 

@@ -1,4 +1,4 @@
-from .models import Service, ClientCost, Cost
+from .models import Service, ClientCost, CostType
 from management.models import Client, Project, Company
 import stripe
 import json
@@ -24,7 +24,6 @@ def create_costs(data):
                 defaults={
                     "project": project,
                     "amount": int(data[str(type)]),
-                    "payment_period": type.payment_period,
                 }
             )
             if not created:

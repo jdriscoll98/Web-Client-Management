@@ -9,17 +9,18 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import ClientCost, CompanyCost, Service, CostType
+from management.models import Client, Project, Company
+from .forms import (CompanyCostForm, ClientCostForm, ServiceForm, InvoiceForm,
+                    CostTypeForm)
 from .utils import (create_costs, send_invoice, get_invoices,
                     get_client_costs, get_invoice_items)
-from .forms import InvoiceForm
-from management.models import Client, Project, Company
 from .mixins import DeleteViewAjax
+
 from datetime import datetime
 import stripe
 import json
-from .forms import CompanyCostForm, ClientCostForm, ServiceForm
-#cost views
-class AddCost(LoginRequiredMixin, CreateView):
+#client cost views
+class AddClientCost(LoginRequiredMixin, CreateView):
     form_class = ClientCost
     template_name = 'financial/cost_form.html'
     success_url = reverse_lazy('website:homepage_view')
@@ -27,20 +28,15 @@ class AddCost(LoginRequiredMixin, CreateView):
     def get_initial(self):
         initial = super(AddCost, self).get_initial()
         initial = initial.copy()
-        client = self.kwargs.get('pk')
+        client = Client.objects.get(pk=self.kwargs.get('pk'))
         initial['client'] = client
         return initial
 
-class AddCompanycost(LoginRequiredMixin, CreateView):
-    model = CompanyCost
-    template_name = 'financial/cost_form.html'
-    fields = '__all__'
-
-class UpdateCost(LoginRequiredMixin, UpdateView):
+class UpdateClientCost(LoginRequiredMixin, UpdateView):
     model = ClientCost
     fields = '__all__'
 
-class DeleteCost(LoginRequiredMixin, DeleteViewAjax):
+class DeleteClientCost(LoginRequiredMixin, DeleteViewAjax):
     model = ClientCost
 
 class CostView(LoginRequiredMixin, TemplateView):
@@ -48,7 +44,7 @@ class CostView(LoginRequiredMixin, TemplateView):
     template_name = 'financial/cost_list.html'
 
     def get_context_data(self, **kwargs):
-        type = CostType.objects.get(pk=self.kwagrs.get('type'))
+        type = CostType.objects.get(pk=self.kwargs.get('type'))
         company = Company.objects.get(pk=self.kwargs.get('pk'))
         context = {
             'title': type.name,
@@ -58,6 +54,46 @@ class CostView(LoginRequiredMixin, TemplateView):
         }
 
         return context
+
+#company cost views
+class AddCompanyCost(LoginRequiredMixin, CreateView):
+    model = CompanyCost
+    template_name = 'financial/cost_form.html'
+    fields = '__all__'
+
+    def get_initial(self):
+        initial = super(AddCost, self).get_initial()
+        initial = initial.copy()
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        initial['company'] = company
+        return initial
+
+class UpdateCompanyCost(LoginRequiredMixin, UpdateView):
+    model = CompanyCost
+    template_name = 'financial/cost_form.html'
+    fields = '__all__'
+
+class DeleteCompanyCost(LoginRequiredMixin, DeleteViewAjax):
+    model = CompanyCost
+
+#cost type views
+class AddCostType(LoginRequiredMixin, CreateView):
+    form_class = CostTypeForm
+    template_name = 'financial/costtype_form.html'
+
+    def get_initial(self):
+        initial = super(AddCostType, self).get_initial()
+        initial = initial.copy()
+        company = Company.objects.get(pk=self.kwargs.get('pk'))
+        initial['company'] = company
+        return initial
+
+class UpdateCostType(LoginRequiredMixin, UpdateView):
+    model = CostType
+    fields = ('name', 'payment_period')
+
+class DeleteCostType(LoginRequiredMixin, DeleteViewAjax):
+    model = CostType
 
 #service views
 class AddService(LoginRequiredMixin, CreateView):
@@ -88,6 +124,7 @@ class UpdateService(LoginRequiredMixin, UpdateView):
 
 class DeleteService(LoginRequiredMixin, DeleteViewAjax):
     model = Service
+
 #cost generator
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
