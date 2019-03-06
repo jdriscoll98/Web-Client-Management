@@ -24,9 +24,10 @@ class HomePageView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         user = User.objects.get(pk=self.request.user.pk)
         companies = Company.objects.filter(members__in=[self.request.user])
+        # Make sure everything lines up, readability and adherence to standards in critical
         context = {
             'companies': companies
-               }
+        }
         return context
 
 class NewUser(CreateView):

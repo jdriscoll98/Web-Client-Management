@@ -1,5 +1,6 @@
 from django.db import models
 
+# What does this do????
 class TypeManager(models.Manager):
 
     use_for_related_fields = True

@@ -9,15 +9,21 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
 from .models import ClientCost, CompanyCost, Service, Cost
+
 from .utils import (create_costs, send_invoice, get_invoices,
                     get_client_costs, get_invoice_items)
+
 from .forms import InvoiceForm
+from .forms import CompanyCostForm, ClientCostForm, ServiceForm
+
 from management.models import Client, Project, Company
 from .mixins import DeleteViewAjax
+
 from datetime import datetime
+
 import stripe
 import json
-from .forms import CompanyCostForm, ClientCostForm, ServiceForm
+
 #cost views
 class AddCost(LoginRequiredMixin, CreateView):
     form_class = ClientCost
@@ -55,7 +61,8 @@ class CostView(LoginRequiredMixin, TemplateView):
             'title':  Cost.TYPES.get_label(label),
             'company': company,
             'company_costs': CompanyCost.objects.filter(type=type),
-            'client_costs': get_client_costs(company, type)
+            'client_costs': get_client_costs(company, type) # Lets talk about this, all that should need to
+            # be passed in is the company... not all these other details
         }
 
         return context
@@ -74,7 +81,7 @@ class AddService(LoginRequiredMixin, CreateView):
     def get_success_url(self, **kwargs):
         print('here')
         next = self.request.POST.get('next', None)
-        print('now here')
+        print('now here') # bruh... cleanup ya dang debugging
         return next
 
 
@@ -84,17 +91,17 @@ class UpdateService(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Modify Service'
+        context['title'] = 'Modify Service' # What is this about?
         return context
 
 class DeleteService(LoginRequiredMixin, DeleteViewAjax):
     model = Service
-#cost generator
+
 class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         company =  Company.objects.get(pk=self.kwargs.get('pk'))
         context = {
-            'company': self.kwargs.get('pk'),
+            'company': self.kwargs.get('pk'), # Definitley not the way to do it, passing wat to much context
             'services' : Service.objects.filter(company=company),
             'clients' : Client.objects.filter(company=company),
             'projects': Project.objects.all(),
@@ -113,12 +120,12 @@ class ManageInvoices(LoginRequiredMixin, TemplateView):
     template_name = 'financial/invoices.html'
 
     def get_context_data(self, *args, **kwargs):
-        company = Company.objects.get(pk=self.kwargs.get('pk'))
-        key = company.stripe_secret
-        invoices = get_invoices(key)
+        company = Company.objects.get(pk=self.kwargs.get('pk')) # No try statement?
+        # key = company.stripe_secret # Why create seperate variable?
+        # invoices = get_invoices(key) # Why create seperate variable?
         context =  {
             'company': company.pk,
-            'invoices' : invoices
+            'invoices' : get_invoices(company.stripe_secret)
         }
         return context
 

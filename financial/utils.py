@@ -4,7 +4,7 @@ import stripe
 import json
 from datetime import datetime
 
-def create_costs(data):
+def create_costs(data): # Sweet gigantic fricken method... never EVER EVERRRRRRRRR do this...
     try:
         company = Company.objects.get(pk=data['company'])
         key = company.stripe_secret
@@ -19,14 +19,12 @@ def create_costs(data):
         project_cost += int(data['Plugin'])
         project_cost += int(data['Theme'])
         type = Cost.TYPES.get_value('project')
-        cost, created = ClientCost.objects.get_or_create(
-            client=client,
-            project=project,
-            type=type,
-            defaults={
-            "amount": project_cost,
-            'payment_period': 'wk'
-            })
+        cost, created = ClientCost.objects.get_or_create( # Add to same line, save space
+            client=client, project=project, type=type, defaults={
+                "amount": project_cost,
+                'payment_period': 'wk'
+            }
+        )
         if not created:
             cost.amount += project_cost
             cost.save()
@@ -91,11 +89,9 @@ def send_invoice(key, client, due_date):
             client.customer_id = customer['id']
             client.save()
         customer_id = client.customer_id
-        print('item created')
+        print('item created') # ....
         invoice = stripe.Invoice.create(
-            customer=customer_id,
-            billing='send_invoice',
-            due_date = due_date,
+            customer=customer_id, billing='send_invoice', due_date = due_date,
         )
         print('invoice created')
         invoice.send_invoice()

@@ -13,6 +13,10 @@ from .mixins import DeleteViewAjax
 from .forms import ProjectForm, ClientForm, MemberForm, CompanyForm
 from .utils import get_income_cost, get_total
 
+# THE ISSUE BIGGER THAN ANYTHING ELSE, WHERE ARE YOUR COMMENTS? HOW WILL SOMEONE ELSE
+# EVER BE ABLE TO KNOW WHAT YOU'RE THINKING? READABLE CODE IS GOOD, BUT SLIGHT COMMENTING
+# MAKES IT EVEN BETTER.
+
 # client views
 class AddClient(LoginRequiredMixin, CreateView):
     form_class = ClientForm
@@ -62,6 +66,7 @@ class AddNewMember(LoginRequiredMixin, FormView):
                                                         self.kwargs.get('pk')})
         return context
 
+    # Don't leave exception printing code in unless required
     def form_valid(self, form, **kwargs):
         try:
             self.object = form.save()
@@ -71,8 +76,6 @@ class AddNewMember(LoginRequiredMixin, FormView):
         except Exception as e:
             print(e)
         return HttpResponseRedirect(self.get_success_url())
-
-
 
     def get_success_url(self, **kwargs):
         next = self.request.POST.get('next', reverse('website:homepage_view'))
@@ -102,7 +105,7 @@ class AddProject(LoginRequiredMixin, CreateView):
     def get_success_url(self, **kwargs):
         print(self.request.POST.get('next'))
         next = self.request.POST.get('next', reverse('website:homepage_view'))
-        print(next)
+        print(next) # Don't leave print stuff if not needed, and again don't declare variables
         return next
 
 class DeleteProject(LoginRequiredMixin, DeleteViewAjax):
@@ -129,6 +132,7 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
+        # I want to avoid using hardcoded anything... lets talk about cleaning this up
         elementor = CompanyCost.TYPES.get_value('elementor')
         domains = CompanyCost.TYPES.get_value('domains')
         servers = CompanyCost.TYPES.get_value('server_hosting')
@@ -179,7 +183,7 @@ class UpdateCompanyMembers(LoginRequiredMixin, View):
     def get(self, *args,**kwargs):
         company = Company.objects.get(pk=self.kwargs.get('company'))
         current_members = company.members.all()
-        print(current_members)
+        print(current_members) # .....
         potential_members = User.objects.exclude(id__in=current_members.values_list('id', flat=True))
         print(potential_members)
         context = {
@@ -198,5 +202,5 @@ class UpdateCompanyMembers(LoginRequiredMixin, View):
             message = "Member added successfully"
         except Exception as e:
             success = False
-            message = "Error adding memeber" + str(e)
+            message = "Error adding memeber" + str(e) # Never leave messages showing this stuff to users
         return JsonResponse({'success':success, 'message': message})

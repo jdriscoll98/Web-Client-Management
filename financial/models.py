@@ -30,7 +30,7 @@ class Cost(models.Model):
         project = ('pj', 'Project')
         plugin = ('pl', 'Plugin')
         theme = ('th', 'Theme')
-        @classmethod
+        @classmethod # HUHUHUH??????
         def get_value(cls, member):
             return cls[member].value[0]
 

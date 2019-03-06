@@ -12,7 +12,9 @@ class ProjectForm(forms.ModelForm):
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
+        # I don't believe this is how the exclude statement works
         exclude = ['customer_id']
+        # Why are you using hidden inputs?
         widgets = {'company': forms.HiddenInput()}
 
 class MemberForm(UserCreationForm):
@@ -22,6 +24,7 @@ class MemberForm(UserCreationForm):
 
     class Meta:
         model = User
+        # Why are you not using exclude in this case?
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
 class CompanyForm(forms.ModelForm):

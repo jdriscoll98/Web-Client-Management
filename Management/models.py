@@ -41,12 +41,14 @@ class Client(models.Model):
     def get_cost(self, label):
         type = Cost.TYPES.get_value(label)
         if Cost.objects.filter(client=self, type=type).exists():
-            cost = Cost.objects.get(client=self, type=type)
-            return cost
-        else:
-            return None
+            # Why are you delcaring variables when you don't need to?
+            return Cost.objects.get(client=self, type=type)
+        # else: # No need for else statement
+        return None
 
     def get_profit(self, type):
+        # Why do you all cost.get_total_cost if it can fail, it's called outside
+        # the try statement... you're only avoiding 1 error
         try:
             cost = Cost.objects.get(client=self, type=type)
         except:
@@ -54,8 +56,8 @@ class Client(models.Model):
         return cost.get_total_cost()
 
     def get_amount_owed(self):
-        total = sum(cost.amount for cost in ClientCost.objects.filter(client=self))
-        return total
+        # Just return the sum, no need to make a variable... super slow
+        return sum(cost.amount for cost in ClientCost.objects.filter(client=self))
 
     def get_customer_id(self):
         return self.customer_id
