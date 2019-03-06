@@ -57,6 +57,7 @@ th {
 
 {% block content %}
 {% include 'website/server_messages.html' %}
+  {% load app_tags %}
 <div class="container">
   <div class="row">
     <div class="col">
@@ -113,8 +114,9 @@ th {
         <tbody>
             {% for type in types %}
               <tr><th>{{ type.name }}</th>
-                <td>${% get_income type %}</td>
+                <td>${% get_income type company %}</td>
               </tr>
+            {% endfor %}
             <tr style="border-top: 1px solid black;">
               <th>
                 Total:

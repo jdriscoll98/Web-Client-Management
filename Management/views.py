@@ -8,7 +8,7 @@ from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from .models import Client, Project, Company
-from financial.models import ClientCost, CompanyCost, Service
+from financial.models import ClientCost, CompanyCost, Service, CostType
 from .mixins import DeleteViewAjax
 from .forms import ProjectForm, ClientForm, MemberForm, CompanyForm
 from .utils import get_income_cost, get_total
@@ -129,13 +129,12 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
-        elementor = CostType.get_value('elementor')
         context = {
             'company': company,
             'clients': Client.objects.filter(company=company),
             'members': company.members.all(),
             'costs': CompanyCost.objects.filter(company=company),
-            'types': Type.objects.filter(company=company),
+            'types': CostType.objects.filter(company=company),
             'total': get_total(company),
             'services': Service.objects.filter(company=company)
 

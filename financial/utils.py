@@ -17,7 +17,7 @@ def create_costs(data):
             if data[str(service)]:
                 project_cost += (int(data[str(service)]) * service.cost_per_hour)
         create_invoice_item(key, client, int(project_cost), str(project))
-        for type in Type.objects.filter(company=company):
+        for type in CostType.objects.filter(company=company):
             cost, created = ClientCost.objects.get_or_create(
                 client=client,
                 type=type,

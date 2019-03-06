@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import timedelta
-from financial.models import ClientCost, CompanyCost
+from financial.models import ClientCost, CompanyCost, CostType
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db.models.signals import post_save

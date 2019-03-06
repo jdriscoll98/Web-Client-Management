@@ -8,7 +8,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views import View
 
-from .models import ClientCost, CompanyCost, Service, Cost
+from .models import ClientCost, CompanyCost, Service, CostType
 from .utils import (create_costs, send_invoice, get_invoices,
                     get_client_costs, get_invoice_items)
 from .forms import InvoiceForm

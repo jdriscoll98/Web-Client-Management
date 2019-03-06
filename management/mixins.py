@@ -4,12 +4,10 @@ from django.urls import reverse_lazy
 
 class DeleteViewAjax(DeleteView):
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
+        self.get_object().delete()
         return self.render_to_response()
 
     def render_to_response(self, **response_kwargs):
         if self.request.is_ajax():
             return JsonResponse({'deleted': True}, safe=False, **response_kwargs)
-        else:
-            return HttpResponseRedirect(reverse_lazy('website:homepage_view'))
+        return HttpResponseRedirect(reverse_lazy('website:homepage_view'))
