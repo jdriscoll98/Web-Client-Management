@@ -17,28 +17,13 @@ class Service(models.Model):
     def get_absolute_url(self):
         return reverse('management:company_page', kwargs={'pk': self.company.pk})
 
+class CostType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    company = models.ForeignKey('management.Company', on_delete=models.CASCADE)
+
 class Cost(models.Model):
-    #choices style from Two scoops of Django 1.11 best practice
-    #lets you loop through choices easily
     class Meta:
         abstract = True
-
-    class TYPES(Enum):
-        elementor =  ('el', 'Elementor')
-        server_hosting =  ('sh', 'Server Hosting')
-        domains = ('do', 'Domains')
-        project = ('pj', 'Project')
-        plugin = ('pl', 'Plugin')
-        theme = ('th', 'Theme')
-        @classmethod
-        def get_value(cls, member):
-            return cls[member].value[0]
-
-        @classmethod
-        def get_label(cls, member):
-            return cls[member].value[1]
-
-    #using model managers to index data
 
 
     #another way to do choices
@@ -53,7 +38,7 @@ class Cost(models.Model):
     )
 
 
-    type = models.CharField(max_length=2, choices=[x.value for x in TYPES])
+    type = models.ForeignKey(CostType, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     last_payment_date = models.DateTimeField(auto_now=True)
     payment_period = models.CharField(max_length=2, choices=PAYMENT_PEROID, default=BIWEEKLY)

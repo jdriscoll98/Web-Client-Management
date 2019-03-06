@@ -129,19 +129,13 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
-        elementor = CompanyCost.TYPES.get_value('elementor')
-        domains = CompanyCost.TYPES.get_value('domains')
-        servers = CompanyCost.TYPES.get_value('server_hosting')
-        project = CompanyCost.TYPES.get_value('project')
+        elementor = CostType.get_value('elementor')
         context = {
             'company': company,
             'clients': Client.objects.filter(company=company),
             'members': company.members.all(),
             'costs': CompanyCost.objects.filter(company=company),
-            'elementor': get_income_cost(company, elementor),
-            'domains': get_income_cost(company, domains),
-            'servers': get_income_cost(company, servers),
-            'project': get_income_cost(company, project),
+            'types': Type.objects.filter(company=company),
             'total': get_total(company),
             'services': Service.objects.filter(company=company)
 

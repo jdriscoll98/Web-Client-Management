@@ -111,30 +111,10 @@ th {
             </tr>
         </thead>
         <tbody>
-          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'elementor' %}">Elementor:</th>
-            {% if elementor %}
-            <td colspan="2" class="value">${{ elementor }}</td>
-            {% else %}
-            <td class="value">$0</td>
-            {% endif %}
-          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'domains' %}">Domains:</th>
-            {% if domains %}
-            <td class="value">${{ domains}}</td>
-            {% else %}
-            <td class="value">$0</td>
-            {% endif %}
-          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'server_hosting' %}">Servers:</th>
-            {% if servers %}
-            <td class="value">${{ servers }}</td>
-            {% else %}
-            <td class="value">$0</td>
-            {% endif %}
-          <tr><th class="cost" href="{% url 'financial:cost' company.pk 'project' %}">Projects:</th>
-            {% if project %}
-            <td class="value" >${{ project }}</td>
-            {% else %}
-          <td class="value">$0</td>
-            {% endif %}
+            {% for type in types %}
+              <tr><th>{{ type.name }}</th>
+                <td>${% get_income type %}</td>
+              </tr>
             <tr style="border-top: 1px solid black;">
               <th>
                 Total:

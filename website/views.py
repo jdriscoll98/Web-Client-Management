@@ -11,7 +11,6 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from management.forms import MemberForm
-from .utils import get_profit, get_total
 from management.models import Company
 from financial.models import Cost
 

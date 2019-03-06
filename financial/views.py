@@ -48,11 +48,10 @@ class CostView(LoginRequiredMixin, TemplateView):
     template_name = 'financial/cost_list.html'
 
     def get_context_data(self, **kwargs):
-        label = self.kwargs.get('type')
-        type = Cost.TYPES.get_value(self.kwargs.get('type'))
+        type = CostType.objects.get(pk=self.kwagrs.get('type'))
         company = Company.objects.get(pk=self.kwargs.get('pk'))
         context = {
-            'title':  Cost.TYPES.get_label(label),
+            'title': type.name,
             'company': company,
             'company_costs': CompanyCost.objects.filter(type=type),
             'client_costs': get_client_costs(company, type)
@@ -98,7 +97,7 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
             'services' : Service.objects.filter(company=company),
             'clients' : Client.objects.filter(company=company),
             'projects': Project.objects.all(),
-            'types': [x.value for x in Cost.TYPES if x.value[0] != 'pj' ]
+            'types':  CostType.objects.filter(company=company)
         }
         return render(self.request, 'financial/estimated_cost_form.html', context)
 

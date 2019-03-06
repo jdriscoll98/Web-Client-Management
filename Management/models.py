@@ -38,8 +38,8 @@ class Client(models.Model):
     def get_absolute_url(self):
         return reverse('management:company_page', kwargs={'pk': self.company.pk})
 
-    def get_cost(self, label):
-        type = Cost.TYPES.get_value(label)
+    def get_cost(self, pk):
+        type = CostType.objects.filter(pk=pk)
         if Cost.objects.filter(client=self, type=type).exists():
             cost = Cost.objects.get(client=self, type=type)
             return cost
@@ -64,6 +64,7 @@ class Client(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=100, unique=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=9, decimal_places=2, default=0)
     github_link = models.URLField(blank=True, null=True)
     folder_link = models.URLField(blank=True, null=True)
 
