@@ -131,8 +131,11 @@ class CompanyPage(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         company = Company.objects.get(pk=self.kwargs.get('pk'))
         self.request.session['company'] = company.pk
-        key = company.stripe_secret
-        invoices = get_invoices(key)
+        if company.stripe_secret:
+            key = company.stripe_secret
+            invoices = get_invoices(key)
+        else:
+            invoices = []
         context = {
             'company': company,
             'clients': Client.objects.filter(company=company),

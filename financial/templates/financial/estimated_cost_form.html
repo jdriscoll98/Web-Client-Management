@@ -48,7 +48,7 @@ th {
 {% endblock custom_css %}
 
 {% block content %}
-<form action="{% url 'financial:estimate' company %}" method="POST">{% csrf_token %}
+<form action="{% url 'financial:estimate' company.pk %}" method="POST">{% csrf_token %}
 <div class="container">
 <div class="row">
   <div class="col-md-8 col-lg-4">

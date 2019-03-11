@@ -129,7 +129,7 @@ class EstimatedCostGenerator(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         company =  Company.objects.get(pk=self.kwargs.get('pk'))
         context = {
-            'company': self.kwargs.get('pk'),
+            'company': company,
             'services' : Service.objects.filter(company=company),
             'clients' : Client.objects.filter(company=company),
             'projects': Project.objects.all(),
